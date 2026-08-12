@@ -13,14 +13,24 @@ function App() {
         if (!formRef.current) return;
 
         try {
-            const serviceId = import.meta.env.VITE_EMAILJS_SERVICE_ID || 'service_xfqxpug';
-            const templateId = import.meta.env.VITE_EMAILJS_TEMPLATE_ID || 'template_05pb6qs';
-            const publicKey = import.meta.env.VITE_EMAILJS_PUBLIC_KEY || '1Rog5VkgQSDsNLzdr';
+            const serviceId = 'service_xfqxpug';
+            const templateId = 'template_05pb6qs';
+            const publicKey = '1Rog5VkgQSDsNLzdr';
 
-            const result = await emailjs.sendForm(
+            const formData = new FormData(formRef.current);
+            const templateParams = {
+                name: formData.get('name') as string,
+                email: formData.get('email') as string,
+                message: formData.get('message') as string,
+                from_name: formData.get('name') as string,
+                from_email: formData.get('email') as string,
+                reply_to: formData.get('email') as string,
+            };
+
+            const result = await emailjs.send(
                 serviceId,
                 templateId,
-                formRef.current,
+                templateParams,
                 publicKey
             );
 
@@ -33,10 +43,7 @@ function App() {
                 setTimeout(() => setFormStatus('idle'), 3000);
             }
         } catch (error: any) {
-            console.error('EmailJS Error details:', error);
-            if (error?.text) {
-                console.error('EmailJS Error text response:', error.text);
-            }
+            console.error('EmailJS Error:', error);
             setFormStatus('error');
             setTimeout(() => setFormStatus('idle'), 3000);
         }

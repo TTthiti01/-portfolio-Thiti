@@ -17,6 +17,8 @@ function App() {
             const templateId = import.meta.env.VITE_EMAILJS_TEMPLATE_ID || 'YOUR_TEMPLATE_ID';
             const publicKey = import.meta.env.VITE_EMAILJS_PUBLIC_KEY || 'YOUR_PUBLIC_KEY';
 
+            console.log('Sending EmailJS with:', { serviceId, templateId, publicKey });
+
             const result = await emailjs.sendForm(
                 serviceId,
                 templateId,
@@ -32,8 +34,11 @@ function App() {
                 setFormStatus('error');
                 setTimeout(() => setFormStatus('idle'), 3000);
             }
-        } catch (error) {
-            console.error('EmailJS Error:', error);
+        } catch (error: any) {
+            console.error('EmailJS Error details:', error);
+            if (error?.text) {
+                console.error('EmailJS Error text response:', error.text);
+            }
             setFormStatus('error');
             setTimeout(() => setFormStatus('idle'), 3000);
         }

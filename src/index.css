@@ -1732,28 +1732,30 @@ body.dark-theme .custom-contrib-card {
 
 /* --- Added Gimmicks (Playful Interactions) --- */
 
-/* Scroll Reveal Styles */
-.reveal-hidden {
-    opacity: 0;
-    transform: translateY(50px);
-    transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
-    will-change: opacity, transform;
-}
+/* Scroll Reveal Styles (Desktops/Tablets only) */
+@media (min-width: 769px) {
+    .reveal-hidden {
+        opacity: 0;
+        transform: translateY(50px);
+        transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        will-change: opacity, transform;
+    }
 
-.reveal-hidden.reveal-left {
-    transform: translateX(-60px);
-}
+    .reveal-hidden.reveal-left {
+        transform: translateX(-60px);
+    }
 
-.reveal-hidden.reveal-right {
-    transform: translateX(60px);
-}
+    .reveal-hidden.reveal-right {
+        transform: translateX(60px);
+    }
 
-.reveal-hidden.reveal-scale {
-    transform: translateY(30px) scale(0.8);
+    .reveal-hidden.reveal-scale {
+        transform: translateY(30px) scale(0.8);
+    }
 }
 
 .revealed {
-    opacity: 1;
+    opacity: 1 !important;
     transform: translate(0, 0) scale(1) !important;
 }
 

@@ -240,9 +240,17 @@ if (ccGrid) {
 setTimeout(() => {
     // 1. Scroll Reveal Animations (Slide & Fade)
     const revealElements = document.querySelectorAll('.exp-card, .project-item, .contact-card, .github-card, .tech-icon-wrapper, .section-title');
+    const isMobile = window.innerWidth <= 768;
+    
+    // On mobile, reveal all elements immediately without hiding
+    if (isMobile) {
+        revealElements.forEach(el => el.classList.add('revealed'));
+        return;
+    }
+
     const revealOptions = {
-        threshold: 0.15,
-        rootMargin: "0px 0px -50px 0px"
+        threshold: 0.05,
+        rootMargin: "0px 0px 50px 0px"
     };
 
     const revealObserver = new IntersectionObserver(function(entries, observer) {

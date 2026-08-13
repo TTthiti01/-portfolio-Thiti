@@ -166,10 +166,9 @@ if (ccGrid) {
     fetch(`https://github-contributions-api.jogruber.de/v4/${username}`)
         .then(res => res.json())
         .then(data => {
-            if (data && data.contributions) {
-                // Get today's date string in YYYY-MM-DD format (local time)
+            if (data && Array.isArray(data.contributions) && data.contributions.length > 0) {
                 const today = new Date();
-                const todayStr = today.getFullYear() + '-' + String(today.getMonth() + 1).padStart(2, '0') + '-' + String(today.getDate()).padStart(2, '0');
+                const todayStr = today.toISOString().split('T')[0];
                 
                 // Sort all contributions by date ascending
                 const sorted = data.contributions.sort((a, b) => a.date.localeCompare(b.date));
@@ -177,40 +176,50 @@ if (ccGrid) {
                 // Filter out future dates
                 const pastAndPresent = sorted.filter(item => item.date <= todayStr);
                 
-                // Get last 371 days (53 weeks * 7 days)
-                const lastYearContribs = pastAndPresent.slice(-371);
+                // Take the last 371 days (53 weeks * 7 days)
+                const displayContribs = pastAndPresent.slice(-371);
                 
-                // Calculate totals
-                const totalLastYear = lastYearContribs.reduce((sum, item) => sum + item.count, 0);
-                const currentYear = today.getFullYear().toString();
-                const totalThisYear = data.total[currentYear] || lastYearContribs
-                    .filter(item => item.date.startsWith(currentYear))
-                    .reduce((sum, item) => sum + item.count, 0);
+                // Calculate total for last 365 days
+                const totalLastYear = displayContribs.reduce((sum, item) => sum + item.count, 0);
+                
+                // Calculate total for current calendar year or sum of total object
+                let totalThisYear = 0;
+                if (data.total) {
+                    const currentYear = today.getFullYear().toString();
+                    if (data.total[currentYear] !== undefined) {
+                        totalThisYear = data.total[currentYear];
+                    } else {
+                        // Sum across all recorded years if current year key is not explicit
+                        totalThisYear = Object.values(data.total).reduce((a, b) => a + b, 0);
+                    }
+                } else {
+                    totalThisYear = totalLastYear;
+                }
 
-                // Update month labels dynamically
+                // Update month labels dynamically based on displayContribs start and end
                 const monthsRow = document.querySelector('.cc-months-row');
-                if (monthsRow) {
+                if (monthsRow && displayContribs.length > 0) {
                     const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-                    const currentMonthIndex = today.getMonth();
+                    const firstDate = new Date(displayContribs[0].date);
+                    const startMonth = firstDate.getMonth();
                     let html = '';
                     for (let i = 0; i <= 12; i++) {
-                        const mIndex = (currentMonthIndex - 12 + i + 12) % 12;
+                        const mIndex = (startMonth + i) % 12;
                         html += `<span>${monthNames[mIndex]}</span>`;
                     }
                     monthsRow.innerHTML = html;
                 }
 
-                renderGrid(lastYearContribs, totalThisYear, totalLastYear);
+                renderGrid(displayContribs, totalThisYear, totalLastYear);
             } else {
                 throw new Error("Invalid data format");
             }
         })
         .catch(err => {
-            console.warn("GitHub Contributions API failed, using high-fidelity mock data.", err);
-            // Render high-fidelity mock data matching the screenshot
+            console.warn("GitHub Contributions API failed, fallback to profile data.", err);
+            // Render basic fallback if offline
             const mockList = [];
             const today = new Date();
-            // Create array of 371 days (53 weeks * 7 days) ending today
             for (let i = 370; i >= 0; i--) {
                 const date = new Date(today);
                 date.setDate(today.getDate() - i);
@@ -223,7 +232,7 @@ if (ccGrid) {
                     level: level
                 });
             }
-            renderGrid(mockList, 222, 282);
+            renderGrid(mockList, 23, 24);
         });
 }
 

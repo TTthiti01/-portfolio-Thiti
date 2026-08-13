@@ -5,6 +5,64 @@ import './index.css';
 function App() {
     const [formStatus, setFormStatus] = useState<'idle' | 'submitting' | 'success' | 'error'>('idle');
     const formRef = useRef<HTMLFormElement>(null);
+    const [githubStats, setGithubStats] = useState<{
+        totalThisYear: number | string;
+        totalLastYear: number | string;
+        contribs: Array<{ date: string; count: number; level: number }>;
+        months: string[];
+    }>({
+        totalThisYear: '...',
+        totalLastYear: '...',
+        contribs: [],
+        months: ["Aug", "Sep", "Oct", "Nov", "Dec", "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug"]
+    });
+
+    useEffect(() => {
+        const username = 'TTthiti01';
+        fetch(`https://github-contributions-api.jogruber.de/v4/${username}`)
+            .then(res => res.json())
+            .then(data => {
+                if (data && Array.isArray(data.contributions) && data.contributions.length > 0) {
+                    const today = new Date();
+                    const todayStr = today.toISOString().split('T')[0];
+                    const sorted = data.contributions.sort((a: any, b: any) => a.date.localeCompare(b.date));
+                    const pastAndPresent = sorted.filter((item: any) => item.date <= todayStr);
+                    const displayContribs = pastAndPresent.slice(-371);
+                    const totalLastYear = displayContribs.reduce((sum: number, item: any) => sum + item.count, 0);
+
+                    let totalThisYear: number = 0;
+                    if (data.total) {
+                        const currentYear = today.getFullYear().toString();
+                        if (data.total[currentYear] !== undefined) {
+                            totalThisYear = Number(data.total[currentYear]);
+                        } else {
+                            totalThisYear = Object.values(data.total).reduce((a: number, b: any) => a + Number(b), 0);
+                        }
+                    } else {
+                        totalThisYear = totalLastYear;
+                    }
+
+                    const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+                    const firstDate = new Date(displayContribs[0].date);
+                    const startMonth = firstDate.getMonth();
+                    const monthList: string[] = [];
+                    for (let i = 0; i <= 12; i++) {
+                        const mIndex = (startMonth + i) % 12;
+                        monthList.push(monthNames[mIndex]);
+                    }
+
+                    setGithubStats({
+                        totalThisYear,
+                        totalLastYear,
+                        contribs: displayContribs,
+                        months: monthList
+                    });
+                }
+            })
+            .catch(err => {
+                console.warn('Failed to fetch GitHub contributions:', err);
+            });
+    }, []);
 
     const handleFormSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -311,39 +369,38 @@ function App() {
                                 <i className="fa-brands fa-github"></i>
                             </div>
                             <div className="cc-user-info">
-                                <a href="https://github.com/TTthiti01" className="cc-username">@TTthiti01</a>
+                                <a href="https://github.com/TTthiti01" target="_blank" rel="noopener noreferrer" className="cc-username">@TTthiti01</a>
                                 <span className="cc-subtitle">Contribution Graph</span>
                             </div>
                         </div>
                         <div className="cc-stats">
-                            <span className="cc-stat-num" id="cc-total-count">--</span>
+                            <span className="cc-stat-num">{githubStats.totalThisYear}</span>
                             <span className="cc-stat-label">THIS YEAR TOTAL</span>
                         </div>
                     </div>
                     
                     <div className="cc-months-row">
-                        <span>Aug</span>
-                        <span>Sep</span>
-                        <span>Oct</span>
-                        <span>Nov</span>
-                        <span>Dec</span>
-                        <span>Jan</span>
-                        <span>Feb</span>
-                        <span>Mar</span>
-                        <span>Apr</span>
-                        <span>May</span>
-                        <span>Jun</span>
-                        <span>Jul</span>
-                        <span>Aug</span>
+                        {githubStats.months.map((m, idx) => (
+                            <span key={idx}>{m}</span>
+                        ))}
                     </div>
 
                     <div className="cc-grid-wrapper">
-                        <div className="cc-grid" id="cc-grid"></div>
+                        <div className="cc-grid">
+                            {githubStats.contribs.map((day, idx) => (
+                                <span 
+                                    key={idx} 
+                                    className="cc-square" 
+                                    data-level={day.level} 
+                                    title={`${day.count} contributions on ${day.date}`}
+                                />
+                            ))}
+                        </div>
                     </div>
                     
                     <div className="cc-footer">
                         <div className="cc-last-year-count">
-                            <span id="cc-year-count">--</span> contributions in the last year
+                            <span>{githubStats.totalLastYear}</span> contributions in the last year
                         </div>
                         <div className="cc-legend">
                             <span>Less</span>

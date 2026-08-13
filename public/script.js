@@ -68,35 +68,33 @@ setTimeout(() => {
             if (icon) icon.className = isDark ? 'fa-solid fa-sun' : 'fa-solid fa-moon';
         };
     }
-});
-
-// Interactive Parallax background glow based on mouse movements
-let isGlowTicking = false;
-window.addEventListener('mousemove', (e) => {
-    if (!isGlowTicking) {
-        window.requestAnimationFrame(() => {
-            const mouseX = e.clientX;
-            const mouseY = e.clientY;
-            
-            // Calculate movement ratios
-            const xRatio = (mouseX / window.innerWidth - 0.5) * 40; // max 20px offset
-            const yRatio = (mouseY / window.innerHeight - 0.5) * 40;
-            
-            const glow1 = document.querySelector('.bg-glow-1');
-            const glow2 = document.querySelector('.bg-glow-2');
-            const glow3 = document.querySelector('.bg-glow-3');
-            const glow4 = document.querySelector('.bg-glow-4');
-            
-            if (glow1) glow1.style.transform = `translate(${xRatio}px, ${yRatio}px)`;
-            if (glow2) glow2.style.transform = `translate(${-xRatio}px, ${-yRatio}px)`; // opposite direction
-            if (glow3) glow3.style.transform = `translate(${xRatio * 0.5}px, ${yRatio * 0.5}px)`;
-            if (glow4) glow4.style.transform = `translate(${-xRatio * 0.8}px, ${-yRatio * 0.8}px)`;
-            
-            isGlowTicking = false;
-        });
-        isGlowTicking = true;
-    }
-});
+// Interactive Parallax background glow based on mouse movements (Desktops only)
+if (window.matchMedia('(pointer: fine)').matches) {
+    let isGlowTicking = false;
+    window.addEventListener('mousemove', (e) => {
+        if (!isGlowTicking) {
+            window.requestAnimationFrame(() => {
+                const mouseX = e.clientX;
+                const mouseY = e.clientY;
+                const xRatio = (mouseX / window.innerWidth - 0.5) * 40;
+                const yRatio = (mouseY / window.innerHeight - 0.5) * 40;
+                
+                const glow1 = document.querySelector('.bg-glow-1');
+                const glow2 = document.querySelector('.bg-glow-2');
+                const glow3 = document.querySelector('.bg-glow-3');
+                const glow4 = document.querySelector('.bg-glow-4');
+                
+                if (glow1) glow1.style.transform = `translate(${xRatio}px, ${yRatio}px)`;
+                if (glow2) glow2.style.transform = `translate(${-xRatio}px, ${-yRatio}px)`;
+                if (glow3) glow3.style.transform = `translate(${xRatio * 0.5}px, ${yRatio * 0.5}px)`;
+                if (glow4) glow4.style.transform = `translate(${-xRatio * 0.8}px, ${-yRatio * 0.8}px)`;
+                
+                isGlowTicking = false;
+            });
+            isGlowTicking = true;
+        }
+    });
+}
 
 // Navbar active link highlight on scroll
 const sections = document.querySelectorAll('section');

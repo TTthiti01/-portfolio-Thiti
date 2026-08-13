@@ -316,7 +316,7 @@ function App() {
                             </div>
                         </div>
                         <div className="cc-stats">
-                            <span className="cc-stat-num" id="cc-total-count">222</span>
+                            <span className="cc-stat-num" id="cc-total-count">--</span>
                             <span className="cc-stat-label">THIS YEAR TOTAL</span>
                         </div>
                     </div>
@@ -343,7 +343,7 @@ function App() {
                     
                     <div className="cc-footer">
                         <div className="cc-last-year-count">
-                            <span id="cc-year-count">282</span> contributions in the last year
+                            <span id="cc-year-count">--</span> contributions in the last year
                         </div>
                         <div className="cc-legend">
                             <span>Less</span>

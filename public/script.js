@@ -127,37 +127,28 @@ window.addEventListener('scroll', () => {
 });
 
 // Fetch and Generate Custom Purple GitHub Contributions Grid
-const ccGrid = document.getElementById('cc-grid');
-const ccTotalCount = document.getElementById('cc-total-count');
-const ccYearCount = document.getElementById('cc-year-count');
+function initGitHubContributions() {
+    const ccGrid = document.getElementById('cc-grid');
+    const ccTotalCount = document.getElementById('cc-total-count');
+    const ccYearCount = document.getElementById('cc-year-count');
 
-if (ccGrid) {
+    if (!ccGrid) {
+        setTimeout(initGitHubContributions, 300);
+        return;
+    }
+
     const username = 'TTthiti01';
-    
-    // Default fallback mock data matching screenshot in case API fails
-    const mockActiveIndices = {
-        119: 2, 125: 1, 126: 4, 133: 4, 145: 2, 154: 4, 161: 1,
-        162: 2, 163: 3, 164: 1, 168: 1, 325: 1, 326: 1, 332: 4,
-        333: 1, 339: 1, 344: 2, 345: 1, 351: 2, 352: 1
-    };
 
     function renderGrid(contributionsList, totalThisYear, totalLastYear) {
         ccGrid.innerHTML = '';
-        let thisYearCount = totalThisYear;
-        let lastYearCount = totalLastYear;
+        if (ccTotalCount) ccTotalCount.textContent = totalThisYear;
+        if (ccYearCount) ccYearCount.textContent = totalLastYear;
 
-        if (ccTotalCount) ccTotalCount.textContent = thisYearCount;
-        if (ccYearCount) ccYearCount.textContent = lastYearCount;
-
-        contributionsList.forEach((day, index) => {
+        contributionsList.forEach((day) => {
             const square = document.createElement('span');
             square.className = 'cc-square';
             square.setAttribute('data-level', day.level);
-            
-            const dateStr = day.date;
-            const countStr = day.count;
-            square.setAttribute('title', `${countStr} contributions on ${dateStr}`);
-
+            square.setAttribute('title', `${day.count} contributions on ${day.date}`);
             ccGrid.appendChild(square);
         });
     }
@@ -182,21 +173,20 @@ if (ccGrid) {
                 // Calculate total for last 365 days
                 const totalLastYear = displayContribs.reduce((sum, item) => sum + item.count, 0);
                 
-                // Calculate total for current calendar year or sum of total object
+                // Calculate total for current calendar year
                 let totalThisYear = 0;
                 if (data.total) {
                     const currentYear = today.getFullYear().toString();
                     if (data.total[currentYear] !== undefined) {
                         totalThisYear = data.total[currentYear];
                     } else {
-                        // Sum across all recorded years if current year key is not explicit
                         totalThisYear = Object.values(data.total).reduce((a, b) => a + b, 0);
                     }
                 } else {
                     totalThisYear = totalLastYear;
                 }
 
-                // Update month labels dynamically based on displayContribs start and end
+                // Update month labels dynamically
                 const monthsRow = document.querySelector('.cc-months-row');
                 if (monthsRow && displayContribs.length > 0) {
                     const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
@@ -216,25 +206,12 @@ if (ccGrid) {
             }
         })
         .catch(err => {
-            console.warn("GitHub Contributions API failed, fallback to profile data.", err);
-            // Render basic fallback if offline
-            const mockList = [];
-            const today = new Date();
-            for (let i = 370; i >= 0; i--) {
-                const date = new Date(today);
-                date.setDate(today.getDate() - i);
-                const dateString = date.toISOString().split('T')[0];
-                const dayIndex = 370 - i;
-                const level = mockActiveIndices[dayIndex] || 0;
-                mockList.push({
-                    date: dateString,
-                    count: level > 0 ? level * 2 : 0,
-                    level: level
-                });
-            }
-            renderGrid(mockList, 23, 24);
+            console.warn("GitHub Contributions API failed", err);
+            renderGrid([], 23, 24);
         });
 }
+
+initGitHubContributions();
 
 // --- Gimmicks & Playful Interactions ---
 setTimeout(() => {

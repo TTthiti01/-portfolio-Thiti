@@ -2101,19 +2101,26 @@ body.dark-theme .resume-btn {
     top: calc(100% + 12px);
     left: 50%;
     transform: translateX(-50%) translateY(12px) scale(0.95);
-    background: var(--card-bg);
-    border: 1px solid var(--card-border-hover);
+    background: #ffffff;
+    border: 1px solid rgba(0, 0, 0, 0.15);
     backdrop-filter: blur(30px);
     -webkit-backdrop-filter: blur(30px);
     border-radius: 20px;
     padding: 0.65rem;
-    width: 260px;
-    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.25),
-                0 0 30px var(--primary-glow);
+    width: 270px;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3),
+                0 0 30px rgba(0, 0, 0, 0.1);
     opacity: 0;
     visibility: hidden;
     transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
-    z-index: 100;
+    z-index: 1000;
+}
+
+body.dark-theme .resume-dropdown-menu {
+    background: #140d21;
+    border: 1px solid rgba(199, 125, 255, 0.35);
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8),
+                0 0 30px rgba(157, 78, 221, 0.3);
 }
 
 .resume-dropdown-container:hover .resume-dropdown-menu {
@@ -2127,14 +2134,18 @@ body.dark-theme .resume-btn {
     align-items: center;
     gap: 0.9rem;
     padding: 0.85rem 1rem;
-    color: var(--text-main);
+    color: #1e1916;
     text-decoration: none;
     border-radius: 14px;
     transition: all 0.25s ease;
 }
 
+body.dark-theme .resume-dropdown-item {
+    color: #ffffff;
+}
+
 .resume-dropdown-item:hover {
-    background: rgba(157, 78, 221, 0.12);
+    background: rgba(157, 78, 221, 0.2);
     transform: translateX(3px);
 }
 
@@ -2152,15 +2163,15 @@ body.dark-theme .resume-btn {
 }
 
 .th-badge {
-    background: rgba(227, 76, 38, 0.15);
-    color: #e34c26;
-    border: 1px solid rgba(227, 76, 38, 0.3);
+    background: rgba(227, 76, 38, 0.2);
+    color: #ff5722;
+    border: 1px solid rgba(227, 76, 38, 0.5);
 }
 
 .en-badge {
-    background: rgba(49, 120, 198, 0.15);
-    color: #3178c6;
-    border: 1px solid rgba(49, 120, 198, 0.3);
+    background: rgba(49, 120, 198, 0.2);
+    color: #38bdf8;
+    border: 1px solid rgba(49, 120, 198, 0.5);
 }
 
 .resume-dropdown-item:hover .item-icon-badge {
@@ -2174,15 +2185,23 @@ body.dark-theme .resume-btn {
 }
 
 .item-title {
-    font-size: 0.92rem;
+    font-size: 0.95rem;
     font-weight: 700;
     color: var(--text-main);
 }
 
+body.dark-theme .item-title {
+    color: #ffffff;
+}
+
 .item-sub {
-    font-size: 0.72rem;
+    font-size: 0.75rem;
     color: var(--text-muted);
-    margin-top: 1px;
+    margin-top: 2px;
+}
+
+body.dark-theme .item-sub {
+    color: #c77dff;
 }
 
 .open-icon {

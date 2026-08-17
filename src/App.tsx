@@ -18,6 +18,18 @@ function App() {
     });
 
     useEffect(() => {
+        const savedTheme = localStorage.getItem('theme') || 'dark';
+        const icon = document.querySelector('#theme-toggle i');
+        if (savedTheme === 'light') {
+            document.body.classList.remove('dark-theme');
+            if (icon) icon.className = 'fa-solid fa-moon';
+        } else {
+            document.body.classList.add('dark-theme');
+            if (icon) icon.className = 'fa-solid fa-sun';
+        }
+    }, []);
+
+    useEffect(() => {
         const username = 'TTthiti01';
         fetch(`https://github-contributions-api.jogruber.de/v4/${username}`)
             .then(res => res.json())
@@ -142,7 +154,19 @@ function App() {
                 </svg>
             </div>
         </div>
-        <button id="theme-toggle" className="theme-toggle" aria-label="Toggle theme">
+        <button 
+            id="theme-toggle" 
+            className="theme-toggle" 
+            aria-label="Toggle theme"
+            onClick={() => {
+                const isDark = document.body.classList.toggle('dark-theme');
+                localStorage.setItem('theme', isDark ? 'dark' : 'light');
+                const icon = document.querySelector('#theme-toggle i');
+                if (icon) {
+                    icon.className = isDark ? 'fa-solid fa-sun' : 'fa-solid fa-moon';
+                }
+            }}
+        >
             <i className="fa-solid fa-sun"></i>
         </button>
     </header>

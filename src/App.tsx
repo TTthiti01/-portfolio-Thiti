@@ -223,25 +223,47 @@ function App() {
 
         {/*  Work Experience / Qualifications Section  */}
         <section className="experience" id="experience">
-            <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '1.5rem' }}>
-                <a 
-                    href="assets/resume.pdf" 
-                    target="_blank" 
-                    rel="noopener noreferrer" 
-                    className="submit-btn" 
-                    style={{ 
-                        display: 'inline-flex', 
-                        alignItems: 'center', 
-                        gap: '0.5rem', 
-                        textDecoration: 'none',
-                        width: 'fit-content',
-                        padding: '0.6rem 1.4rem',
-                        fontSize: '0.95rem'
-                    }}
-                >
-                    <i className="fa-solid fa-file-pdf"></i>
-                    Resume
-                </a>
+            <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '2.5rem' }}>
+                <div className="resume-dropdown-container" style={{ position: 'relative', display: 'inline-block' }}>
+                    <button 
+                        className="submit-btn" 
+                        style={{ 
+                            display: 'inline-flex', 
+                            alignItems: 'center', 
+                            gap: '0.6rem', 
+                            textDecoration: 'none',
+                            width: 'fit-content',
+                            padding: '0.7rem 1.6rem',
+                            fontSize: '1rem',
+                            cursor: 'pointer'
+                        }}
+                    >
+                        <i className="fa-solid fa-file-pdf"></i>
+                        Resume
+                        <i className="fa-solid fa-chevron-down" style={{ fontSize: '0.8rem', marginLeft: '0.2rem' }}></i>
+                    </button>
+
+                    <div className="resume-dropdown-menu">
+                        <a 
+                            href="assets/resume-th.pdf" 
+                            target="_blank" 
+                            rel="noopener noreferrer" 
+                            className="resume-dropdown-item"
+                        >
+                            <i className="fa-solid fa-file-lines"></i>
+                            <span>Resume (ภาษาไทย)</span>
+                        </a>
+                        <a 
+                            href="assets/resume-en.pdf" 
+                            target="_blank" 
+                            rel="noopener noreferrer" 
+                            className="resume-dropdown-item"
+                        >
+                            <i className="fa-solid fa-file-lines"></i>
+                            <span>Resume (English)</span>
+                        </a>
+                    </div>
+                </div>
             </div>
             <h2 className="section-title">Education & Core Skills</h2>
             <div className="experience-grid">

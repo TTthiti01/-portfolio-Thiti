@@ -46,28 +46,7 @@ setTimeout(() => {
         typingEffect();
     }
 
-    // Theme logic
-    const themeBtn = document.getElementById('theme-toggle');
-    const icon = themeBtn ? themeBtn.querySelector('i') : null;
-    
-    // Check saved theme
-    const savedTheme = localStorage.getItem('theme') || 'dark'; // Default to dark
-    if (savedTheme === 'light') {
-        document.body.classList.remove('dark-theme');
-        if (icon) icon.className = 'fa-solid fa-moon';
-    } else {
-        document.body.classList.add('dark-theme');
-        if (icon) icon.className = 'fa-solid fa-sun';
-    }
 
-    if (themeBtn) {
-        themeBtn.onclick = () => {
-            document.body.classList.toggle('dark-theme');
-            const isDark = document.body.classList.contains('dark-theme');
-            localStorage.setItem('theme', isDark ? 'dark' : 'light');
-            if (icon) icon.className = isDark ? 'fa-solid fa-sun' : 'fa-solid fa-moon';
-        };
-    }
 // Interactive Parallax background glow based on mouse movements (Desktops only)
 if (window.matchMedia('(pointer: fine)').matches) {
     let isGlowTicking = false;

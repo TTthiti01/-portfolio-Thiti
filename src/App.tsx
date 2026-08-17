@@ -17,17 +17,20 @@ function App() {
         months: ["Aug", "Sep", "Oct", "Nov", "Dec", "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug"]
     });
 
+    const [isDark, setIsDark] = useState<boolean>(() => {
+        const saved = localStorage.getItem('theme');
+        return saved ? saved === 'dark' : true;
+    });
+
     useEffect(() => {
-        const savedTheme = localStorage.getItem('theme') || 'dark';
-        const icon = document.querySelector('#theme-toggle i');
-        if (savedTheme === 'light') {
-            document.body.classList.remove('dark-theme');
-            if (icon) icon.className = 'fa-solid fa-moon';
-        } else {
+        if (isDark) {
             document.body.classList.add('dark-theme');
-            if (icon) icon.className = 'fa-solid fa-sun';
+            localStorage.setItem('theme', 'dark');
+        } else {
+            document.body.classList.remove('dark-theme');
+            localStorage.setItem('theme', 'light');
         }
-    }, []);
+    }, [isDark]);
 
     useEffect(() => {
         const username = 'TTthiti01';
@@ -158,16 +161,9 @@ function App() {
             id="theme-toggle" 
             className="theme-toggle" 
             aria-label="Toggle theme"
-            onClick={() => {
-                const isDark = document.body.classList.toggle('dark-theme');
-                localStorage.setItem('theme', isDark ? 'dark' : 'light');
-                const icon = document.querySelector('#theme-toggle i');
-                if (icon) {
-                    icon.className = isDark ? 'fa-solid fa-sun' : 'fa-solid fa-moon';
-                }
-            }}
+            onClick={() => setIsDark(prev => !prev)}
         >
-            <i className="fa-solid fa-sun"></i>
+            <i className={`fa-solid ${isDark ? 'fa-sun' : 'fa-moon'}`}></i>
         </button>
     </header>
 

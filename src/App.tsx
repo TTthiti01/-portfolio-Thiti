@@ -218,6 +218,27 @@ function App() {
                 <p className="hero-desc">
                     Computer Science student seeking an entry-level Frontend Developer or IT Support opportunity. Eager to apply React, TypeScript, responsive UI, and technical troubleshooting skills in real-world projects while continuing to grow in a collaborative software team.
                 </p>
+
+                <div style={{ marginTop: '1.5rem', display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
+                    <a 
+                        href="assets/resume.pdf" 
+                        target="_blank" 
+                        rel="noopener noreferrer" 
+                        className="submit-btn" 
+                        style={{ 
+                            display: 'inline-flex', 
+                            alignItems: 'center', 
+                            gap: '0.5rem', 
+                            textDecoration: 'none',
+                            width: 'fit-content',
+                            padding: '0.75rem 1.5rem',
+                            fontSize: '0.95rem'
+                        }}
+                    >
+                        <i className="fa-solid fa-file-pdf"></i>
+                        View / Download Resume
+                    </a>
+                </div>
             </div>
         </section>
 

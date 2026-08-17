@@ -218,51 +218,50 @@ function App() {
                 <p className="hero-desc">
                     Computer Science student seeking an entry-level Frontend Developer or IT Support opportunity. Eager to apply React, TypeScript, responsive UI, and technical troubleshooting skills in real-world projects while continuing to grow in a collaborative software team.
                 </p>
-
-                <div style={{ marginTop: '1.5rem', display: 'flex', justifyContent: 'flex-start' }}>
-                    <div className="resume-dropdown-container">
-                        <button className="resume-btn" aria-label="Resume options">
-                            <span className="resume-btn-glow"></span>
-                            <i className="fa-solid fa-file-pdf pdf-icon"></i>
-                            <span className="resume-btn-text">Resume</span>
-                            <i className="fa-solid fa-chevron-down arrow-icon"></i>
-                        </button>
-
-                        <div className="resume-dropdown-menu" style={{ left: '0', transform: 'translateY(12px) scale(0.95)' }}>
-                            <a 
-                                href="assets/Thitipong_Songkasin_Resume_TH_With_Photo.pdf" 
-                                target="_blank" 
-                                rel="noopener noreferrer" 
-                                className="resume-dropdown-item"
-                            >
-                                <div className="item-icon-badge th-badge">TH</div>
-                                <div className="item-info">
-                                    <span className="item-title">Resume ภาษาไทย</span>
-                                    <span className="item-sub">PDF Format &bull; Thai Version</span>
-                                </div>
-                                <i className="fa-solid fa-arrow-up-right-from-square open-icon"></i>
-                            </a>
-                            <a 
-                                href="assets/Thitipong_Songkasin_Resume_EN_With_Photo.pdf" 
-                                target="_blank" 
-                                rel="noopener noreferrer" 
-                                className="resume-dropdown-item"
-                            >
-                                <div className="item-icon-badge en-badge">EN</div>
-                                <div className="item-info">
-                                    <span className="item-title">Resume English</span>
-                                    <span className="item-sub">PDF Format &bull; English Version</span>
-                                </div>
-                                <i className="fa-solid fa-arrow-up-right-from-square open-icon"></i>
-                            </a>
-                        </div>
-                    </div>
-                </div>
             </div>
         </section>
 
         {/*  Work Experience / Qualifications Section  */}
         <section className="experience" id="experience">
+            <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '3rem' }}>
+                <div className="resume-dropdown-container">
+                    <button className="resume-btn" aria-label="Resume options">
+                        <span className="resume-btn-glow"></span>
+                        <i className="fa-solid fa-file-pdf pdf-icon"></i>
+                        <span className="resume-btn-text">Resume</span>
+                        <i className="fa-solid fa-chevron-down arrow-icon"></i>
+                    </button>
+
+                    <div className="resume-dropdown-menu">
+                        <a 
+                            href="assets/Thitipong_Songkasin_Resume_TH_With_Photo.pdf" 
+                            target="_blank" 
+                            rel="noopener noreferrer" 
+                            className="resume-dropdown-item"
+                        >
+                            <div className="item-icon-badge th-badge">TH</div>
+                            <div className="item-info">
+                                <span className="item-title">Resume ภาษาไทย</span>
+                                <span className="item-sub">PDF Format &bull; Thai Version</span>
+                            </div>
+                            <i className="fa-solid fa-arrow-up-right-from-square open-icon"></i>
+                        </a>
+                        <a 
+                            href="assets/Thitipong_Songkasin_Resume_EN_With_Photo.pdf" 
+                            target="_blank" 
+                            rel="noopener noreferrer" 
+                            className="resume-dropdown-item"
+                        >
+                            <div className="item-icon-badge en-badge">EN</div>
+                            <div className="item-info">
+                                <span className="item-title">Resume English</span>
+                                <span className="item-sub">PDF Format &bull; English Version</span>
+                            </div>
+                            <i className="fa-solid fa-arrow-up-right-from-square open-icon"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
             <h2 className="section-title">Education & Core Skills</h2>
             <div className="experience-grid">
                 

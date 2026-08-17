@@ -245,7 +245,7 @@ function App() {
 
                     <div className="resume-dropdown-menu">
                         <a 
-                            href="assets/resume-th.pdf" 
+                            href="assets/Thitipong_Songkasin_Resume_TH_With_Photo.pdf" 
                             target="_blank" 
                             rel="noopener noreferrer" 
                             className="resume-dropdown-item"
@@ -254,7 +254,7 @@ function App() {
                             <span>Resume (ภาษาไทย)</span>
                         </a>
                         <a 
-                            href="assets/resume-en.pdf" 
+                            href="assets/Thitipong_Songkasin_Resume_EN_With_Photo.pdf" 
                             target="_blank" 
                             rel="noopener noreferrer" 
                             className="resume-dropdown-item"

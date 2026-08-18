@@ -22,6 +22,47 @@ function App() {
         return saved ? saved === 'dark' : true;
     });
 
+    const [modalData, setModalData] = useState<{ title: string; subtitle: string; details: string } | null>(null);
+
+    const [typewriterText, setTypewriterText] = useState<string>('');
+
+    useEffect(() => {
+        const words = ["Computer Science Student.", "Frontend Developer.", "IT Support."];
+        let wordIndex = 0;
+        let charIndex = 0;
+        let isDeleting = false;
+        let timeoutId: NodeJS.Timeout;
+
+        const type = () => {
+            const currentWord = words[wordIndex];
+
+            if (isDeleting) {
+                charIndex--;
+                setTypewriterText(currentWord.substring(0, charIndex));
+            } else {
+                charIndex++;
+                setTypewriterText(currentWord.substring(0, charIndex));
+            }
+
+            let typeSpeed = isDeleting ? 60 : 100;
+
+            if (!isDeleting && charIndex === currentWord.length) {
+                typeSpeed = 2000;
+                isDeleting = true;
+            } else if (isDeleting && charIndex === 0) {
+                isDeleting = false;
+                wordIndex = (wordIndex + 1) % words.length;
+                typeSpeed = 500;
+            }
+
+            timeoutId = setTimeout(type, typeSpeed);
+        };
+
+        type();
+
+        return () => clearTimeout(timeoutId);
+    }, []);
+
     useEffect(() => {
         if (isDark) {
             document.body.classList.add('dark-theme');
@@ -123,12 +164,128 @@ function App() {
     };
 
     useEffect(() => {
-        if (document.querySelector('script[src="/script.js"]')) return;
-        // Dynamically load the script to ensure DOM is ready
-        const script = document.createElement('script');
-        script.src = '/script.js';
-        script.async = true;
-        document.body.appendChild(script);
+        // Parallax background glow based on mouse movements
+        const handleMouseMove = (e: MouseEvent) => {
+            if (window.matchMedia('(pointer: fine)').matches) {
+                const mouseX = e.clientX;
+                const mouseY = e.clientY;
+                const xRatio = (mouseX / window.innerWidth - 0.5) * 40;
+                const yRatio = (mouseY / window.innerHeight - 0.5) * 40;
+
+                const glow1 = document.querySelector('.bg-glow-1') as HTMLElement;
+                const glow2 = document.querySelector('.bg-glow-2') as HTMLElement;
+                const glow3 = document.querySelector('.bg-glow-3') as HTMLElement;
+                const glow4 = document.querySelector('.bg-glow-4') as HTMLElement;
+
+                if (glow1) glow1.style.transform = `translate(${xRatio}px, ${yRatio}px)`;
+                if (glow2) glow2.style.transform = `translate(${-xRatio}px, ${-yRatio}px)`;
+                if (glow3) glow3.style.transform = `translate(${xRatio * 0.5}px, ${yRatio * 0.5}px)`;
+                if (glow4) glow4.style.transform = `translate(${-xRatio * 0.8}px, ${-yRatio * 0.8}px)`;
+            }
+        };
+
+        // Scroll active navigation link
+        const handleScroll = () => {
+            const sections = document.querySelectorAll('section');
+            const navLinks = document.querySelectorAll('.nav-link');
+            let current = '';
+            const scrollPos = window.pageYOffset;
+
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                if (scrollPos >= (sectionTop - 150)) {
+                    current = section.getAttribute('id') || '';
+                }
+            });
+
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href')?.includes(current)) {
+                    link.classList.add('active');
+                }
+            });
+        };
+
+        window.addEventListener('mousemove', handleMouseMove);
+        window.addEventListener('scroll', handleScroll);
+
+        // Scroll Reveal Animations
+        const revealElements = document.querySelectorAll('.exp-card, .project-item, .contact-card, .github-card, .tech-icon-wrapper, .section-title');
+        const isMobile = window.innerWidth <= 768;
+
+        if (isMobile) {
+            revealElements.forEach(el => el.classList.add('revealed'));
+        } else {
+            const revealObserver = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (!entry.isIntersecting) return;
+                    entry.target.classList.add('revealed');
+                    observer.unobserve(entry.target);
+                });
+            }, { threshold: 0.05, rootMargin: "0px 0px 50px 0px" });
+
+            let projIndex = 0;
+            let techIndex = 0;
+
+            revealElements.forEach(el => {
+                el.classList.add('reveal-hidden');
+                if (el.classList.contains('project-item')) {
+                    if (projIndex % 2 === 0) el.classList.add('reveal-left');
+                    else el.classList.add('reveal-right');
+                    projIndex++;
+                } else if (el.classList.contains('tech-icon-wrapper')) {
+                    el.classList.add('reveal-scale');
+                    (el as HTMLElement).style.transitionDelay = `${(techIndex % 11) * 80}ms`;
+                    techIndex++;
+                } else if (el.classList.contains('exp-card')) {
+                    el.classList.add('reveal-scale');
+                }
+                revealObserver.observe(el);
+            });
+        }
+
+        // 3D Tilt Effect
+        const tiltCards = document.querySelectorAll('.exp-card, .project-item');
+        const cleanups: Array<() => void> = [];
+
+        tiltCards.forEach(cardEl => {
+            const card = cardEl as HTMLElement;
+            const onMouseMove = (e: MouseEvent) => {
+                const rect = card.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                const centerX = rect.width / 2;
+                const centerY = rect.height / 2;
+                const rotateX = ((y - centerY) / centerY) * -4;
+                const rotateY = ((x - centerX) / centerX) * 4;
+                card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.02, 1.02, 1.02)`;
+            };
+
+            const onMouseLeave = () => {
+                card.style.transform = `perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)`;
+                card.style.transition = 'transform 0.5s ease';
+            };
+
+            const onMouseEnter = () => {
+                card.style.transition = 'none';
+            };
+
+            card.addEventListener('mousemove', onMouseMove);
+            card.addEventListener('mouseleave', onMouseLeave);
+            card.addEventListener('mouseenter', onMouseEnter);
+
+            cleanups.push(() => {
+                card.removeEventListener('mousemove', onMouseMove);
+                card.removeEventListener('mouseleave', onMouseLeave);
+                card.removeEventListener('mouseenter', onMouseEnter);
+            });
+        });
+
+        return () => {
+            window.removeEventListener('mousemove', handleMouseMove);
+            window.removeEventListener('scroll', handleScroll);
+            cleanups.forEach(cleanup => cleanup());
+        };
     }, []);
 
     return (
@@ -210,7 +367,7 @@ function App() {
             <div className="hero-content">
                 <div className="typewriter-container">
                     <span className="typewriter-prefix">I'm a </span>
-                    <span className="typewriter-text" id="typewriter">Frontend Developer.</span>
+                    <span className="typewriter-text" id="typewriter">{typewriterText}</span>
                 </div>
                 
                 <p className="company-status">Currently, I'm a Computer Science Student at <a href="#" className="company-link">@RMUTSB</a>.</p>
@@ -266,7 +423,11 @@ function App() {
             <div className="experience-grid">
                 
                 {/*  Card 1: Education  */}
-                <div className="exp-card">
+                <div className="exp-card" onClick={() => setModalData({
+                    title: "Bachelor of Computer Science",
+                    subtitle: "RMUTSB • GPA: 3.20 • 2022 - Present",
+                    details: "Rajamangala University of Technology Suvarnabhumi (Huntra Campus). Faculty of Science and Technology, majoring in Computer Science."
+                })}>
                     <div className="exp-icon-box">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                             <path d="M22 10v6M2 10l10-5 10 5-10 5z" />
@@ -281,7 +442,11 @@ function App() {
                 </div>
 
                 {/*  Card 2: Web Dev  */}
-                <div className="exp-card">
+                <div className="exp-card" onClick={() => setModalData({
+                    title: "Front-end Development",
+                    subtitle: "React • TypeScript • JavaScript",
+                    details: "Frontend foundation in React, TypeScript, JavaScript, HTML, and CSS. Able to build responsive interfaces for different screen sizes with a focus on clear usability."
+                })}>
                     <div className="exp-icon-box">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                             <polygon points="12 2 2 7 12 12 22 7 12 2" />
@@ -297,7 +462,11 @@ function App() {
                 </div>
 
                 {/*  Card 3: IT Support  */}
-                <div className="exp-card">
+                <div className="exp-card" onClick={() => setModalData({
+                    title: "Hardware & IT Support",
+                    subtitle: "PC Assembly & Troubleshooting",
+                    details: "Knowledge of PC assembly, hardware specification analysis, and technical troubleshooting. Hands-on use of Git, Postman, and VS Code for development and testing."
+                })}>
                     <div className="exp-icon-box">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                             <rect x="2" y="3" width="20" height="14" rx="2" ry="2" />
@@ -313,7 +482,11 @@ function App() {
                 </div>
 
                 {/*  Card 4: Specialized Subjects  */}
-                <div className="exp-card">
+                <div className="exp-card" onClick={() => setModalData({
+                    title: "Collaboration & UX",
+                    subtitle: "Problem Solving & Teamwork",
+                    details: "Collaborative project experience with Git/GitHub, including accessibility-aware UI, screen-reader support, and voice-based interactions."
+                })}>
                     <div className="exp-icon-box">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                             <circle cx="12" cy="12" r="10" />
@@ -612,13 +785,15 @@ function App() {
     </footer>
 
     {/*  Generic Modal for Experience Details  */}
-    <div id="exp-modal" className="modal-overlay">
+    <div id="exp-modal" className={`modal-overlay ${modalData ? 'active' : ''}`} onClick={(e) => {
+        if (e.target === e.currentTarget) setModalData(null);
+    }}>
         <div className="modal-content">
-            <button className="modal-close"><i className="fa-solid fa-xmark"></i></button>
-            <h3 id="modal-title">Title</h3>
-            <p id="modal-subtitle" className="company-duration">Subtitle</p>
+            <button className="modal-close" onClick={() => setModalData(null)}><i className="fa-solid fa-xmark"></i></button>
+            <h3 id="modal-title">{modalData?.title || 'Title'}</h3>
+            <p id="modal-subtitle" className="company-duration">{modalData?.subtitle || 'Subtitle'}</p>
             <div id="modal-body" className="exp-details-modal">
-                {/*  Content injected here  */}
+                {modalData?.details}
             </div>
         </div>
     </div>

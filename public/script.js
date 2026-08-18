@@ -1,50 +1,5 @@
-// Typewriter Effect
-const words = ["Computer Science Student.", "Frontend Developer.", "IT Support Specialist."];
-let i = 0;
-let timer;
-
-function typingEffect() {
-    let word = words[i].split("");
-    var loopTyping = function() {
-        if (word.length > 0) {
-            document.getElementById('typewriter').innerHTML += word.shift();
-        } else {
-            setTimeout(deletingEffect, 2000);
-            return false;
-        }
-        timer = setTimeout(loopTyping, 100);
-    };
-    loopTyping();
-}
-
-function deletingEffect() {
-    let word = words[i].split("");
-    var loopDeleting = function() {
-        if (word.length > 0) {
-            word.pop();
-            document.getElementById('typewriter').innerHTML = word.join("");
-        } else {
-            if (words.length > (i + 1)) {
-                i++;
-            } else {
-                i = 0;
-            }
-            setTimeout(typingEffect, 500);
-            return false;
-        }
-        timer = setTimeout(loopDeleting, 60);
-    };
-    loopDeleting();
-}
-
-// Start Typewriter & Theme Management
+// Start Theme Management & Interactions
 setTimeout(() => {
-    // Clear initial content from HTML to avoid flash
-    const typewriterEl = document.getElementById('typewriter');
-    if (typewriterEl) {
-        typewriterEl.innerHTML = "";
-        typingEffect();
-    }
 
 
 // Interactive Parallax background glow based on mouse movements (Desktops only)

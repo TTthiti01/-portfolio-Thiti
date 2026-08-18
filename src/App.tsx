@@ -31,7 +31,7 @@ function App() {
         let wordIndex = 0;
         let charIndex = 0;
         let isDeleting = false;
-        let timeoutId: NodeJS.Timeout;
+        let timeoutId: any;
 
         const type = () => {
             const currentWord = words[wordIndex];

@@ -164,9 +164,11 @@ function App() {
     };
 
     useEffect(() => {
-        // Parallax background glow based on mouse movements
+        const isTouchDevice = !window.matchMedia('(pointer: fine)').matches;
+
+        // Parallax background glow based on mouse movements (desktop only)
         const handleMouseMove = (e: MouseEvent) => {
-            if (window.matchMedia('(pointer: fine)').matches) {
+            if (!isTouchDevice) {
                 const mouseX = e.clientX;
                 const mouseY = e.clientY;
                 const xRatio = (mouseX / window.innerWidth - 0.5) * 40;
@@ -184,30 +186,39 @@ function App() {
             }
         };
 
-        // Scroll active navigation link
+        // Throttled Scroll active navigation link via requestAnimationFrame
+        let isTicking = false;
         const handleScroll = () => {
-            const sections = document.querySelectorAll('section');
-            const navLinks = document.querySelectorAll('.nav-link');
-            let current = '';
-            const scrollPos = window.pageYOffset;
+            if (!isTicking) {
+                window.requestAnimationFrame(() => {
+                    const sections = document.querySelectorAll('section');
+                    const navLinks = document.querySelectorAll('.nav-link');
+                    let current = '';
+                    const scrollPos = window.pageYOffset;
 
-            sections.forEach(section => {
-                const sectionTop = section.offsetTop;
-                if (scrollPos >= (sectionTop - 150)) {
-                    current = section.getAttribute('id') || '';
-                }
-            });
+                    sections.forEach(section => {
+                        const sectionTop = section.offsetTop;
+                        if (scrollPos >= (sectionTop - 150)) {
+                            current = section.getAttribute('id') || '';
+                        }
+                    });
 
-            navLinks.forEach(link => {
-                link.classList.remove('active');
-                if (link.getAttribute('href')?.includes(current)) {
-                    link.classList.add('active');
-                }
-            });
+                    navLinks.forEach(link => {
+                        link.classList.remove('active');
+                        if (link.getAttribute('href')?.includes(current)) {
+                            link.classList.add('active');
+                        }
+                    });
+                    isTicking = false;
+                });
+                isTicking = true;
+            }
         };
 
-        window.addEventListener('mousemove', handleMouseMove);
-        window.addEventListener('scroll', handleScroll);
+        if (!isTouchDevice) {
+            window.addEventListener('mousemove', handleMouseMove, { passive: true });
+        }
+        window.addEventListener('scroll', handleScroll, { passive: true });
 
         // Scroll Reveal Animations
         const revealElements = document.querySelectorAll('.exp-card, .project-item, .contact-card, .github-card, .tech-icon-wrapper, .section-title');
@@ -244,42 +255,44 @@ function App() {
             });
         }
 
-        // 3D Tilt Effect
-        const tiltCards = document.querySelectorAll('.exp-card, .project-item');
+        // 3D Tilt Effect (Desktop only)
         const cleanups: Array<() => void> = [];
+        if (!isTouchDevice) {
+            const tiltCards = document.querySelectorAll('.exp-card, .project-item');
 
-        tiltCards.forEach(cardEl => {
-            const card = cardEl as HTMLElement;
-            const onMouseMove = (e: MouseEvent) => {
-                const rect = card.getBoundingClientRect();
-                const x = e.clientX - rect.left;
-                const y = e.clientY - rect.top;
-                const centerX = rect.width / 2;
-                const centerY = rect.height / 2;
-                const rotateX = ((y - centerY) / centerY) * -4;
-                const rotateY = ((x - centerX) / centerX) * 4;
-                card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.02, 1.02, 1.02)`;
-            };
+            tiltCards.forEach(cardEl => {
+                const card = cardEl as HTMLElement;
+                const onMouseMove = (e: MouseEvent) => {
+                    const rect = card.getBoundingClientRect();
+                    const x = e.clientX - rect.left;
+                    const y = e.clientY - rect.top;
+                    const centerX = rect.width / 2;
+                    const centerY = rect.height / 2;
+                    const rotateX = ((y - centerY) / centerY) * -4;
+                    const rotateY = ((x - centerX) / centerX) * 4;
+                    card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.02, 1.02, 1.02)`;
+                };
 
-            const onMouseLeave = () => {
-                card.style.transform = `perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)`;
-                card.style.transition = 'transform 0.5s ease';
-            };
+                const onMouseLeave = () => {
+                    card.style.transform = `perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)`;
+                    card.style.transition = 'transform 0.5s ease';
+                };
 
-            const onMouseEnter = () => {
-                card.style.transition = 'none';
-            };
+                const onMouseEnter = () => {
+                    card.style.transition = 'none';
+                };
 
-            card.addEventListener('mousemove', onMouseMove);
-            card.addEventListener('mouseleave', onMouseLeave);
-            card.addEventListener('mouseenter', onMouseEnter);
+                card.addEventListener('mousemove', onMouseMove, { passive: true });
+                card.addEventListener('mouseleave', onMouseLeave, { passive: true });
+                card.addEventListener('mouseenter', onMouseEnter, { passive: true });
 
-            cleanups.push(() => {
-                card.removeEventListener('mousemove', onMouseMove);
-                card.removeEventListener('mouseleave', onMouseLeave);
-                card.removeEventListener('mouseenter', onMouseEnter);
+                cleanups.push(() => {
+                    card.removeEventListener('mousemove', onMouseMove);
+                    card.removeEventListener('mouseleave', onMouseLeave);
+                    card.removeEventListener('mouseenter', onMouseEnter);
+                });
             });
-        });
+        }
 
         return () => {
             window.removeEventListener('mousemove', handleMouseMove);

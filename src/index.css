@@ -1435,14 +1435,35 @@ body.dark-theme .theme-toggle:hover {
 
 @media (max-width: 768px) {
     /* Hide heavy GPU blur background spots on mobile for faster loading and smooth scrolling */
-    .bg-glow {
+    .bg-glow, #stars-container {
         display: none !important;
     }
 
-    /* Reduce backdrop blur radius on mobile cards for better FPS */
-    .project-description, .contact-card, .resume-dropdown-menu, .resume-btn {
-        backdrop-filter: blur(10px) !important;
-        -webkit-backdrop-filter: blur(10px) !important;
+    /* Disable GPU-heavy backdrop-filter repaints during scroll on mobile */
+    .project-description, .contact-card, .resume-dropdown-menu, .resume-btn, .navbar, .side-nav, .nav-icon, .nav-label {
+        backdrop-filter: none !important;
+        -webkit-backdrop-filter: none !important;
+    }
+
+    .project-description {
+        background: rgba(255, 255, 255, 0.92) !important;
+    }
+
+    body.dark-theme .project-description {
+        background: rgba(18, 9, 36, 0.92) !important;
+    }
+
+    .contact-card {
+        background: rgba(255, 255, 255, 0.95) !important;
+    }
+
+    body.dark-theme .contact-card {
+        background: rgba(18, 9, 36, 0.95) !important;
+    }
+
+    /* Disable infinite CSS keyframe loops on mobile to save CPU/GPU frame ticks */
+    .floating-wrapper, .stretching-rope, .circular-text, .orbit-1, .orbit-2 {
+        animation: none !important;
     }
 
     .container {

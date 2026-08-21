@@ -301,7 +301,7 @@ function App() {
     <header className="navbar" style={{'display': 'flex', 'justifyContent': 'space-between', 'alignItems': 'center'}}>
         <div className="logo-wrapper">
             <div className="logo">
-                <img src="assets/logo.png" alt="Thitipong Songkasin" className="logo-img" />
+                <img src="assets/logo.png" alt="Thitipong Songkasin" className="logo-img" loading="eager" decoding="async" />
             </div>
             <div className="circular-text">
                 <svg viewBox="0 0 100 100">
@@ -360,7 +360,7 @@ function App() {
             <div className="profile-container">
                 <div className="profile-glow"></div>
                 <div className="profile-image-wrapper">
-                    <img src="assets/avatar.jpg" alt="Thitipong Songkasin" className="profile-image" />
+                    <img src="assets/avatar.jpg" alt="Thitipong Songkasin" className="profile-image" loading="eager" decoding="async" />
                 </div>
             </div>
 
@@ -581,7 +581,7 @@ function App() {
                 <div className="central-badge-container">
                     <div className="central-badge-glow"></div>
                     <div className="central-badge">
-                        <img src="assets/logo.png" alt="Thitipong Songkasin" className="central-badge-img" />
+                        <img src="assets/logo.png" alt="Thitipong Songkasin" className="central-badge-img" loading="lazy" decoding="async" />
                     </div>
                     {/*  Orbit Rings decoration  */}
                     <div className="orbit-ring orbit-1"></div>
@@ -611,13 +611,12 @@ function App() {
                         </div>
                     </div>
                     
-                    <div className="cc-months-row">
-                        {githubStats.months.map((m, idx) => (
-                            <span key={idx}>{m}</span>
-                        ))}
-                    </div>
-
                     <div className="cc-grid-wrapper">
+                        <div className="cc-months-row">
+                            {githubStats.months.map((m, idx) => (
+                                <span key={idx}>{m}</span>
+                            ))}
+                        </div>
                         <div className="cc-grid">
                             {githubStats.contribs.map((day, idx) => (
                                 <span 
@@ -701,7 +700,7 @@ function App() {
                 <div className="project-image-container">
                     <a href="https://trip-share-phi.vercel.app/" target="_blank" rel="noopener noreferrer" style={{ display: 'block', width: '100%', height: '100%' }}>
                         <div className="project-image-glow"></div>
-                        <img src="assets/trip.png" alt="TripShare App Dashboard" className="project-img" />
+                        <img src="assets/trip.png" alt="TripShare App Dashboard" className="project-img" loading="lazy" decoding="async" />
                     </a>
                 </div>
             </div>
@@ -726,7 +725,7 @@ function App() {
                 </div>
                 <div className="project-image-container">
                     <div className="project-image-glow"></div>
-                    <img src="assets/Todolist.png" alt="TodoList Website Dashboard" className="project-img" />
+                    <img src="assets/Todolist.png" alt="TodoList Website Dashboard" className="project-img" loading="lazy" decoding="async" />
                 </div>
             </div>
 

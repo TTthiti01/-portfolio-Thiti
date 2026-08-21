@@ -1434,6 +1434,17 @@ body.dark-theme .theme-toggle:hover {
 }
 
 @media (max-width: 768px) {
+    /* Hide heavy GPU blur background spots on mobile for faster loading and smooth scrolling */
+    .bg-glow {
+        display: none !important;
+    }
+
+    /* Reduce backdrop blur radius on mobile cards for better FPS */
+    .project-description, .contact-card, .resume-dropdown-menu, .resume-btn {
+        backdrop-filter: blur(10px) !important;
+        -webkit-backdrop-filter: blur(10px) !important;
+    }
+
     .container {
         padding: 0 1.25rem;
     }
@@ -1443,6 +1454,16 @@ body.dark-theme .theme-toggle:hover {
         padding: 0 1.25rem;
     }
 
+    .logo-wrapper {
+        width: 60px;
+        height: 60px;
+    }
+
+    .logo-img {
+        width: 34px;
+        height: 34px;
+    }
+
     /* Floating mobile navigation bar at bottom center */
     .side-nav {
         right: 50%;
@@ -1450,19 +1471,21 @@ body.dark-theme .theme-toggle:hover {
         bottom: 1.25rem;
         transform: translateX(50%);
         flex-direction: row;
-        gap: 0.65rem;
-        padding: 0.5rem 0.85rem;
-        background: rgba(245, 240, 235, 0.75);
+        gap: 0.5rem;
+        padding: 0.4rem 0.65rem;
+        background: rgba(245, 240, 235, 0.85);
         border: 1px solid rgba(255, 255, 255, 0.6);
         border-radius: 20px;
-        backdrop-filter: blur(25px);
-        -webkit-backdrop-filter: blur(25px);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
         box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
+        max-width: 94vw;
+        box-sizing: border-box;
         z-index: 1000;
     }
 
     body.dark-theme .side-nav {
-        background: rgba(18, 9, 36, 0.85);
+        background: rgba(18, 9, 36, 0.9);
         border-color: rgba(255, 255, 255, 0.15);
         box-shadow: 0 10px 35px rgba(0, 0, 0, 0.5);
     }
@@ -1519,17 +1542,27 @@ body.dark-theme .theme-toggle:hover {
         padding: 0 1rem;
     }
     
+    .logo-wrapper {
+        width: 52px;
+        height: 52px;
+    }
+
+    .logo-img {
+        width: 30px;
+        height: 30px;
+    }
+
     .hero {
-        padding-top: 100px;
-        padding-bottom: 70px;
+        padding-top: 90px;
+        padding-bottom: 60px;
     }
     
     .hero-headline {
-        font-size: 1.9rem;
+        font-size: 1.8rem;
     }
     
     .typewriter-container {
-        font-size: 1.35rem;
+        font-size: 1.2rem;
     }
     
     .exp-card {
@@ -1544,11 +1577,11 @@ body.dark-theme .theme-toggle:hover {
     }
     
     .contact-card {
-        padding: 2rem 1.25rem;
+        padding: 1.75rem 1rem;
     }
     
     .contact-sub {
-        font-size: 1.4rem;
+        font-size: 1.3rem;
     }
     
     .email-btn {
@@ -1557,11 +1590,13 @@ body.dark-theme .theme-toggle:hover {
     }
 
     .footer-section {
-        padding: 40px 0 60px 0;
+        padding: 40px 0 70px 0;
     }
 
     .footer-giant-text {
-        font-size: 18vw;
+        font-size: 14vw;
+        max-width: 100%;
+        overflow: hidden;
     }
 }
 
@@ -1668,8 +1703,9 @@ body.dark-theme .custom-contrib-card {
 
 /* Month labels row styling */
 .cc-months-row {
-    display: grid;
-    grid-template-columns: repeat(13, 1fr);
+    display: flex;
+    justify-content: space-between;
+    width: 686px;
     color: #8e8a9f;
     font-size: 10px;
     padding-left: 2px;
@@ -1788,8 +1824,15 @@ body.dark-theme .custom-contrib-card {
     transform: translate(0, 0) scale(1) !important;
 }
 
-.tech-icon-wrapper.revealed {
-    transform: translateX(-50%) scale(1) !important;
+@media (min-width: 992px) {
+    .tech-icon-wrapper.revealed {
+        transform: translateX(-50%) scale(1) !important;
+    }
+}
+@media (max-width: 991px) {
+    .tech-icon-wrapper.revealed {
+        transform: scale(1) !important;
+    }
 }
 
 /* Floating Balloon Effect */

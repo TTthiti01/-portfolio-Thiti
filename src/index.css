@@ -1461,8 +1461,8 @@ body.dark-theme .theme-toggle:hover {
         background: rgba(18, 9, 36, 0.95) !important;
     }
 
-    /* Disable infinite CSS keyframe loops on mobile to save CPU/GPU frame ticks */
-    .floating-wrapper, .stretching-rope, .circular-text, .orbit-1, .orbit-2 {
+    /* Disable heavy decorative SVG animation loops on mobile */
+    .floating-wrapper, .stretching-rope, .orbit-1, .orbit-2 {
         animation: none !important;
     }
 
@@ -2091,6 +2091,7 @@ body.dark-theme .footer-giant-text {
     width: 100%;
     height: 100%;
     animation: rotateText 10s linear infinite;
+    will-change: transform;
     pointer-events: none;
     z-index: 1;
 }

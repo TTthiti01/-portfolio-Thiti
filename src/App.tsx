@@ -167,23 +167,26 @@ function App() {
     useEffect(() => {
         const isTouchDevice = !window.matchMedia('(pointer: fine)').matches;
 
-        // Parallax background glow based on mouse movements (desktop only)
+        // Parallax background glow based on mouse movements (desktop only - throttled with rAF)
+        let mouseTicking = false;
+        const glow1 = document.querySelector('.bg-glow-1') as HTMLElement;
+        const glow2 = document.querySelector('.bg-glow-2') as HTMLElement;
+        const glow3 = document.querySelector('.bg-glow-3') as HTMLElement;
+        const glow4 = document.querySelector('.bg-glow-4') as HTMLElement;
+
         const handleMouseMove = (e: MouseEvent) => {
-            if (!isTouchDevice) {
-                const mouseX = e.clientX;
-                const mouseY = e.clientY;
-                const xRatio = (mouseX / window.innerWidth - 0.5) * 40;
-                const yRatio = (mouseY / window.innerHeight - 0.5) * 40;
+            if (!isTouchDevice && !mouseTicking) {
+                window.requestAnimationFrame(() => {
+                    const xRatio = (e.clientX / window.innerWidth - 0.5) * 35;
+                    const yRatio = (e.clientY / window.innerHeight - 0.5) * 35;
 
-                const glow1 = document.querySelector('.bg-glow-1') as HTMLElement;
-                const glow2 = document.querySelector('.bg-glow-2') as HTMLElement;
-                const glow3 = document.querySelector('.bg-glow-3') as HTMLElement;
-                const glow4 = document.querySelector('.bg-glow-4') as HTMLElement;
-
-                if (glow1) glow1.style.transform = `translate(${xRatio}px, ${yRatio}px)`;
-                if (glow2) glow2.style.transform = `translate(${-xRatio}px, ${-yRatio}px)`;
-                if (glow3) glow3.style.transform = `translate(${xRatio * 0.5}px, ${yRatio * 0.5}px)`;
-                if (glow4) glow4.style.transform = `translate(${-xRatio * 0.8}px, ${-yRatio * 0.8}px)`;
+                    if (glow1) glow1.style.transform = `translate3d(${xRatio}px, ${yRatio}px, 0)`;
+                    if (glow2) glow2.style.transform = `translate3d(${-xRatio}px, ${-yRatio}px, 0)`;
+                    if (glow3) glow3.style.transform = `translate3d(${xRatio * 0.5}px, ${yRatio * 0.5}px, 0)`;
+                    if (glow4) glow4.style.transform = `translate3d(${-xRatio * 0.8}px, ${-yRatio * 0.8}px, 0)`;
+                    mouseTicking = false;
+                });
+                mouseTicking = true;
             }
         };
 

@@ -1,6 +1,7 @@
 import { useEffect, useState, useRef } from 'react';
 import emailjs from '@emailjs/browser';
 import './index.css';
+import Preloader from './Preloader';
 
 function App() {
     const [formStatus, setFormStatus] = useState<'idle' | 'submitting' | 'success' | 'error'>('idle');
@@ -303,6 +304,7 @@ function App() {
 
     return (
         <>
+            <Preloader />
             
     {/*  Background Glow Elements  */}
     <div className="bg-glow bg-glow-1"></div>

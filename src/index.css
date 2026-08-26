@@ -509,8 +509,10 @@ body.dark-theme .side-nav .nav-link.active .nav-label {
 }
 
 .logo-face-img {
-    object-fit: contain;
-    padding: 12px;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    padding: 0;
     background: var(--bg-color);
     image-rendering: -webkit-optimize-contrast;
     image-rendering: crisp-edges;

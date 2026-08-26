@@ -24,7 +24,7 @@ function App() {
     });
 
     const [modalData, setModalData] = useState<{ title: string; subtitle: string; details: string } | null>(null);
-
+    const [showLogoInProfile, setShowLogoInProfile] = useState<boolean>(false);
     const [typewriterText, setTypewriterText] = useState<string>('');
 
     useEffect(() => {
@@ -374,8 +374,18 @@ function App() {
             
             <div className="profile-container">
                 <div className="profile-glow"></div>
-                <div className="profile-image-wrapper">
-                    <img src="assets/avatar.jpg" alt="Thitipong Songkasin" className="profile-image" loading="eager" decoding="async" />
+                <div 
+                    className="profile-image-wrapper"
+                    onClick={() => setShowLogoInProfile(prev => !prev)}
+                    title="คลิกเพื่อสลับรูปโปรไฟล์ / โลโก้"
+                >
+                    <img 
+                        src={showLogoInProfile ? "assets/logo.png" : "assets/avatar.jpg"} 
+                        alt="Thitipong Songkasin" 
+                        className="profile-image" 
+                        loading="eager" 
+                        decoding="async" 
+                    />
                 </div>
             </div>
 

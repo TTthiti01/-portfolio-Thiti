@@ -509,8 +509,11 @@ body.dark-theme .side-nav .nav-link.active .nav-label {
 }
 
 .logo-face-img {
-    object-fit: cover;
+    object-fit: contain;
+    padding: 12px;
     background: var(--bg-color);
+    image-rendering: -webkit-optimize-contrast;
+    image-rendering: crisp-edges;
 }
 
 .flip-hint-badge {

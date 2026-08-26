@@ -508,7 +508,7 @@ body.dark-theme .side-nav .nav-link.active .nav-label {
 }
 
 .logo-face-img {
-    object-fit: contain;
+    object-fit: cover;
     background: var(--bg-color);
 }
 

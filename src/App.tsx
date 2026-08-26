@@ -375,17 +375,31 @@ function App() {
             <div className="profile-container">
                 <div className="profile-glow"></div>
                 <div 
-                    className="profile-image-wrapper"
+                    className={`profile-card-flip ${showLogoInProfile ? 'is-flipped' : ''}`}
                     onClick={() => setShowLogoInProfile(prev => !prev)}
-                    title="คลิกเพื่อสลับรูปโปรไฟล์ / โลโก้"
+                    title="คลิกเพื่อพลิกสลับรูปโปรไฟล์ / โลโก้"
                 >
-                    <img 
-                        src={showLogoInProfile ? "assets/logo.png" : "assets/avatar.jpg"} 
-                        alt="Thitipong Songkasin" 
-                        className="profile-image" 
-                        loading="eager" 
-                        decoding="async" 
-                    />
+                    <div className="profile-card-face profile-card-front">
+                        <img 
+                            src="assets/avatar.jpg" 
+                            alt="Thitipong Avatar" 
+                            className="profile-image" 
+                            loading="eager" 
+                            decoding="async" 
+                        />
+                    </div>
+                    <div className="profile-card-face profile-card-back">
+                        <img 
+                            src="assets/logo.png" 
+                            alt="Thitipong Logo" 
+                            className="profile-image logo-face-img" 
+                            loading="eager" 
+                            decoding="async" 
+                        />
+                    </div>
+                    <div className="flip-hint-badge">
+                        <i className="fa-solid fa-rotate"></i>
+                    </div>
                 </div>
             </div>
 

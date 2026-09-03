@@ -20,7 +20,7 @@ function App() {
 
     const [isDark, setIsDark] = useState<boolean>(() => {
         const saved = localStorage.getItem('theme');
-        return saved ? saved === 'dark' : true;
+        return saved ? saved === 'dark' : false;
     });
 
     const [modalData, setModalData] = useState<{ title: string; subtitle: string; details: string } | null>(null);

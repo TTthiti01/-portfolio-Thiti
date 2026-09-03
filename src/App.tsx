@@ -712,12 +712,14 @@ function App() {
                     </div>
                     <div className="project-links">
                         <a href="https://github.com/7sadakonr/Nyeta" target="_blank" className="proj-link" aria-label="GitHub"><i className="fa-brands fa-github"></i></a>
-                        <a href="#" className="proj-link" aria-label="Live Demo"><i className="fa-solid fa-arrow-up-right-from-square"></i></a>
+                        <a href="https://nyeta.vercel.app/" target="_blank" rel="noopener noreferrer" className="proj-link" aria-label="Live Demo"><i className="fa-solid fa-arrow-up-right-from-square"></i></a>
                     </div>
                 </div>
                 <div className="project-image-container">
-                    <div className="project-image-glow"></div>
-                    <div className="project-img" style={{ backgroundColor: '#ffffff', aspectRatio: '16/9', borderRadius: '12px' }}></div>
+                    <a href="https://nyeta.vercel.app/" target="_blank" rel="noopener noreferrer" style={{ display: 'block', width: '100%', height: '100%' }}>
+                        <div className="project-image-glow"></div>
+                        <div className="project-img" style={{ backgroundColor: '#ffffff', aspectRatio: '16/9', borderRadius: '12px' }}></div>
+                    </a>
                 </div>
             </div>
 

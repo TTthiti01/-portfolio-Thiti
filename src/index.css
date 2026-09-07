@@ -61,7 +61,7 @@
 }
 
 /* Dark Theme overrides (Deep Purple Neon) */
-body.dark-theme {
+body.dark-theme, html.dark-theme {
     color-scheme: dark;
     --bg-color: #000000;
     --card-bg: linear-gradient(135deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0.01) 100%), rgba(18, 9, 36, 0.45);

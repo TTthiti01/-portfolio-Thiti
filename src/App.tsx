@@ -774,8 +774,33 @@ function App() {
                 </div>
             </div>
 
-            {/*  Project 3: Nyeta  */}
+            {/*  Project 3: Thiti Car Wash  */}
             <div className="project-item">
+                <div className="project-content">
+                    <span className="project-tag">Featured Project</span>
+                    <h3 className="project-title">Thiti Carwash</h3>
+                    <div className="project-description">
+                        <p>A car wash booking website built with HTML and CSS. It features service presentations and a booking system interface for customers.</p>
+                    </div>
+                    <div className="project-tech-list">
+                        <span>HTML5</span>
+                        <span>CSS3</span>
+                    </div>
+                    <div className="project-links">
+                        <a href="https://github.com/TTthiti01/thiticarwash" target="_blank" rel="noopener noreferrer" className="proj-link" aria-label="GitHub"><i className="fa-brands fa-github"></i></a>
+                        <a href="https://thiticarwash.vercel.app/" target="_blank" rel="noopener noreferrer" className="proj-link" aria-label="Live Demo"><i className="fa-solid fa-arrow-up-right-from-square"></i></a>
+                    </div>
+                </div>
+                <div className="project-image-container">
+                    <a href="https://thiticarwash.vercel.app/" target="_blank" rel="noopener noreferrer" style={{ display: 'block', width: '100%', height: '100%' }}>
+                        <div className="project-image-glow"></div>
+                        <img src="assets/thiticarwash.png" alt="Thiti Carwash Project" className="project-img" loading="lazy" decoding="async" />
+                    </a>
+                </div>
+            </div>
+
+        {/*  Project 4: Nyeta  */}
+            <div className="project-item project-reverse">
                 <div className="project-content">
                     <span className="project-tag">Featured Project</span>
                     <h3 className="project-title">Nyeta - Visual Assistance Platform</h3>
@@ -805,8 +830,8 @@ function App() {
                 </div>
             </div>
 
-            {/*  Project 4: TodoList Website  */}
-            <div className="project-item project-reverse">
+            {/*  Project 5: TodoList Website  */}
+            <div className="project-item">
                 <div className="project-content">
                     <span className="project-tag">Featured Project</span>
                     <h3 className="project-title">TodoList Website (2025)</h3>
@@ -829,32 +854,7 @@ function App() {
                 </div>
             </div>
 
-            {/*  Project 4: Thiti Car Wash  */}
-            <div className="project-item project-reverse">
-                <div className="project-content">
-                    <span className="project-tag">Featured Project</span>
-                    <h3 className="project-title">Thiti Carwash</h3>
-                    <div className="project-description">
-                        <p>A car wash booking website built with HTML and CSS. It features service presentations and a booking system interface for customers.</p>
-                    </div>
-                    <div className="project-tech-list">
-                        <span>HTML5</span>
-                        <span>CSS3</span>
-                    </div>
-                    <div className="project-links">
-                        <a href="https://github.com/TTthiti01/thiticarwash" target="_blank" rel="noopener noreferrer" className="proj-link" aria-label="GitHub"><i className="fa-brands fa-github"></i></a>
-                        <a href="https://thiticarwash.vercel.app/" target="_blank" rel="noopener noreferrer" className="proj-link" aria-label="Live Demo"><i className="fa-solid fa-arrow-up-right-from-square"></i></a>
-                    </div>
-                </div>
-                <div className="project-image-container">
-                    <a href="https://thiticarwash.vercel.app/" target="_blank" rel="noopener noreferrer" style={{ display: 'block', width: '100%', height: '100%' }}>
-                        <div className="project-image-glow"></div>
-                        <img src="assets/thiticarwash.png" alt="Thiti Carwash Project" className="project-img" loading="lazy" decoding="async" />
-                    </a>
-                </div>
-            </div>
-
-        </section>
+            </section>
 
         {/*  Contact Section  */}
         <section className="contact-section" id="contact">

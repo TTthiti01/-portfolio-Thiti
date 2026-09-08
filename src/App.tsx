@@ -822,37 +822,17 @@ function App() {
                         <a href="https://nyeta.vercel.app/" target="_blank" rel="noopener noreferrer" className="proj-link" aria-label="Live Demo"><i className="fa-solid fa-arrow-up-right-from-square"></i></a>
                     </div>
                 </div>
-                <div className="project-image-container">
-                    <a href="https://nyeta.vercel.app/" target="_blank" rel="noopener noreferrer" style={{ display: 'block', width: '100%', height: '100%' }}>
+                <div className="project-image-container" style={{ backgroundColor: '#111', padding: '1.5rem', aspectRatio: '16/9' }}>
+                    <a href="https://nyeta.vercel.app/" target="_blank" rel="noopener noreferrer" style={{ display: 'flex', width: '100%', height: '100%', gap: '4%', justifyContent: 'center', alignItems: 'center' }}>
                         <div className="project-image-glow"></div>
-                        <div className="project-img" style={{ backgroundColor: '#ffffff', aspectRatio: '16/9', borderRadius: '12px' }}></div>
+                        <img src="assets/nyeta-1.png" alt="Nyeta Home" style={{ height: '100%', width: 'auto', objectFit: 'contain', borderRadius: '12px', boxShadow: '0 8px 24px rgba(0,0,0,0.4)', zIndex: 1 }} loading="lazy" />
+                        <img src="assets/nyeta-2.png" alt="Nyeta Scanner" style={{ height: '100%', width: 'auto', objectFit: 'contain', borderRadius: '12px', boxShadow: '0 8px 24px rgba(0,0,0,0.4)', zIndex: 1 }} loading="lazy" />
+                        <img src="assets/nyeta-3.png" alt="Nyeta Call" style={{ height: '100%', width: 'auto', objectFit: 'contain', borderRadius: '12px', boxShadow: '0 8px 24px rgba(0,0,0,0.4)', zIndex: 1 }} loading="lazy" />
                     </a>
                 </div>
             </div>
 
-            {/*  Project 5: TodoList Website  */}
-            <div className="project-item">
-                <div className="project-content">
-                    <span className="project-tag">Featured Project</span>
-                    <h3 className="project-title">TodoList Website (2025)</h3>
-                    <div className="project-description">
-                        <p>Full-stack task management app with Pending / In Progress / Completed states, a dashboard, and authentication.</p>
-                    </div>
-                    <div className="project-tech-list">
-                        <span>React</span>
-                        <span>TypeScript</span>
-                        <span>PostgreSQL</span>
-                    </div>
-                    <div className="project-links">
-                        <a href="https://github.com/TTthiti01" target="_blank" className="proj-link" aria-label="GitHub"><i className="fa-brands fa-github"></i></a>
-                        <a href="http://localhost:3000/backoffice/home/todo" target="_blank" className="proj-link" aria-label="Live Demo"><i className="fa-solid fa-arrow-up-right-from-square"></i></a>
-                    </div>
-                </div>
-                <div className="project-image-container">
-                    <div className="project-image-glow"></div>
-                    <img src="assets/Todolist.png" alt="TodoList Website Dashboard" className="project-img" loading="lazy" decoding="async" />
-                </div>
-            </div>
+
 
             </section>
 

@@ -715,33 +715,35 @@ function App() {
         {/*  Featured Projects Section  */}
         <section className="projects-section" id="projects">
             
-            {/*  Project 1: Nyeta  */}
+            {/*  Project 1: Personal Portfolio  */}
             <div className="project-item">
                 <div className="project-content">
                     <span className="project-tag">Featured Project</span>
-                    <h3 className="project-title">Nyeta - Visual Assistance Platform</h3>
+                    <h3 className="project-title">Portfolio Website</h3>
                     <div className="project-description">
-                        <p>Collaborated on a platform for blind and visually impaired users combining AI visual assistance, object detection, document/currency recognition, and live volunteer video calls. Contributed to eyes-free UX patterns using spoken feedback, TTS, haptics, and screen-reader-friendly interactions.</p>
+                        <p>A modern, interactive portfolio website showcasing my skills, projects, and experiences. Built with a focus on responsive design, smooth animations, and clean user interface.</p>
                     </div>
                     <div className="project-tech-list">
-                        <span>Next.js</span>
                         <span>React</span>
                         <span>TypeScript</span>
-                        <span>Tailwind CSS</span>
-                        <span>WebRTC</span>
-                        <span>Gemini API</span>
-                        <span>TensorFlow.js</span>
-                        <span>Pusher</span>
+                        <span>Vite</span>
+                        <span>CSS</span>
                     </div>
                     <div className="project-links">
-                        <a href="https://github.com/7sadakonr/Nyeta" target="_blank" className="proj-link" aria-label="GitHub"><i className="fa-brands fa-github"></i></a>
-                        <a href="https://nyeta.vercel.app/" target="_blank" rel="noopener noreferrer" className="proj-link" aria-label="Live Demo"><i className="fa-solid fa-arrow-up-right-from-square"></i></a>
+                        <a href="https://github.com/TTthiti01/-portfolio-Thiti" target="_blank" rel="noopener noreferrer" className="proj-link" aria-label="GitHub"><i className="fa-brands fa-github"></i></a>
+                        <a href="/" target="_blank" rel="noopener noreferrer" className="proj-link" aria-label="Live Demo" title="View This Portfolio in New Tab"><i className="fa-solid fa-arrow-up-right-from-square"></i></a>
                     </div>
                 </div>
                 <div className="project-image-container">
-                    <a href="https://nyeta.vercel.app/" target="_blank" rel="noopener noreferrer" style={{ display: 'block', width: '100%', height: '100%' }}>
+                    <a href="/" target="_blank" rel="noopener noreferrer" style={{ display: 'block', width: '100%', height: '100%', cursor: 'pointer' }}>
                         <div className="project-image-glow"></div>
-                        <div className="project-img" style={{ backgroundColor: '#ffffff', aspectRatio: '16/9', borderRadius: '12px' }}></div>
+                        <img 
+                            src="assets/portfolio-dark.png" 
+                            alt="Personal Portfolio Screenshot" 
+                            className="project-img" 
+                            loading="lazy" 
+                            decoding="async" 
+                        />
                     </a>
                 </div>
             </div>
@@ -772,8 +774,39 @@ function App() {
                 </div>
             </div>
 
-            {/*  Project 3: TodoList Website  */}
+            {/*  Project 3: Nyeta  */}
             <div className="project-item">
+                <div className="project-content">
+                    <span className="project-tag">Featured Project</span>
+                    <h3 className="project-title">Nyeta - Visual Assistance Platform</h3>
+                    <div className="project-description">
+                        <p>Collaborated on a platform for blind and visually impaired users combining AI visual assistance, object detection, document/currency recognition, and live volunteer video calls. Contributed to eyes-free UX patterns using spoken feedback, TTS, haptics, and screen-reader-friendly interactions.</p>
+                    </div>
+                    <div className="project-tech-list">
+                        <span>Next.js</span>
+                        <span>React</span>
+                        <span>TypeScript</span>
+                        <span>Tailwind CSS</span>
+                        <span>WebRTC</span>
+                        <span>Gemini API</span>
+                        <span>TensorFlow.js</span>
+                        <span>Pusher</span>
+                    </div>
+                    <div className="project-links">
+                        <a href="https://github.com/7sadakonr/Nyeta" target="_blank" className="proj-link" aria-label="GitHub"><i className="fa-brands fa-github"></i></a>
+                        <a href="https://nyeta.vercel.app/" target="_blank" rel="noopener noreferrer" className="proj-link" aria-label="Live Demo"><i className="fa-solid fa-arrow-up-right-from-square"></i></a>
+                    </div>
+                </div>
+                <div className="project-image-container">
+                    <a href="https://nyeta.vercel.app/" target="_blank" rel="noopener noreferrer" style={{ display: 'block', width: '100%', height: '100%' }}>
+                        <div className="project-image-glow"></div>
+                        <div className="project-img" style={{ backgroundColor: '#ffffff', aspectRatio: '16/9', borderRadius: '12px' }}></div>
+                    </a>
+                </div>
+            </div>
+
+            {/*  Project 4: TodoList Website  */}
+            <div className="project-item project-reverse">
                 <div className="project-content">
                     <span className="project-tag">Featured Project</span>
                     <h3 className="project-title">TodoList Website (2025)</h3>
@@ -793,39 +826,6 @@ function App() {
                 <div className="project-image-container">
                     <div className="project-image-glow"></div>
                     <img src="assets/Todolist.png" alt="TodoList Website Dashboard" className="project-img" loading="lazy" decoding="async" />
-                </div>
-            </div>
-
-            {/*  Project 4: Personal Portfolio  */}
-            <div className="project-item project-reverse">
-                <div className="project-content">
-                    <span className="project-tag">Featured Project</span>
-                    <h3 className="project-title">Portfolio Website</h3>
-                    <div className="project-description">
-                        <p>A modern, interactive portfolio website showcasing my skills, projects, and experiences. Built with a focus on responsive design, smooth animations, and clean user interface.</p>
-                    </div>
-                    <div className="project-tech-list">
-                        <span>React</span>
-                        <span>TypeScript</span>
-                        <span>Vite</span>
-                        <span>CSS</span>
-                    </div>
-                    <div className="project-links">
-                        <a href="https://github.com/TTthiti01/-portfolio-Thiti" target="_blank" rel="noopener noreferrer" className="proj-link" aria-label="GitHub"><i className="fa-brands fa-github"></i></a>
-                        <a href="/" target="_blank" rel="noopener noreferrer" className="proj-link" aria-label="Live Demo" title="View This Portfolio in New Tab"><i className="fa-solid fa-arrow-up-right-from-square"></i></a>
-                    </div>
-                </div>
-                <div className="project-image-container">
-                    <a href="/" target="_blank" rel="noopener noreferrer" style={{ display: 'block', width: '100%', height: '100%', cursor: 'pointer' }}>
-                        <div className="project-image-glow"></div>
-                        <img 
-                            src="assets/portfolio-dark.png" 
-                            alt="Personal Portfolio Screenshot" 
-                            className="project-img" 
-                            loading="lazy" 
-                            decoding="async" 
-                        />
-                    </a>
                 </div>
             </div>
 

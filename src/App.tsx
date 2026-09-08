@@ -25,6 +25,7 @@ function App() {
 
     const [modalData, setModalData] = useState<{ title: string; subtitle: string; details: string } | null>(null);
     const [showLogoInProfile, setShowLogoInProfile] = useState<boolean>(false);
+    const [isResumeOpen, setIsResumeOpen] = useState<boolean>(false);
     const [typewriterText, setTypewriterText] = useState<string>('');
 
     useEffect(() => {
@@ -65,14 +66,17 @@ function App() {
     }, []);
 
     useEffect(() => {
+        const metaThemeColor = document.getElementById('theme-color-meta');
         if (isDark) {
-            document.body.classList.add('dark-theme');
             document.documentElement.classList.add('dark-theme');
+            document.body.classList.add('dark-theme');
             localStorage.setItem('theme', 'dark');
+            if (metaThemeColor) metaThemeColor.setAttribute('content', '#000000');
         } else {
-            document.body.classList.remove('dark-theme');
             document.documentElement.classList.remove('dark-theme');
+            document.body.classList.remove('dark-theme');
             localStorage.setItem('theme', 'light');
+            if (metaThemeColor) metaThemeColor.setAttribute('content', '#ece5dd');
         }
     }, [isDark]);
 
@@ -102,8 +106,8 @@ function App() {
                     }
 
                     const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-                    const firstDate = new Date(displayContribs[0].date);
-                    const startMonth = firstDate.getMonth();
+                    const firstDateParts = displayContribs[0].date.split('-');
+                    const startMonth = firstDateParts.length >= 2 ? (parseInt(firstDateParts[1], 10) - 1 + 12) % 12 : 0;
                     const monthList: string[] = [];
                     for (let i = 0; i <= 12; i++) {
                         const mIndex = (startMonth + i) % 12;
@@ -182,10 +186,15 @@ function App() {
                     const xRatio = (e.clientX / window.innerWidth - 0.5) * 35;
                     const yRatio = (e.clientY / window.innerHeight - 0.5) * 35;
 
-                    if (glow1) glow1.style.transform = `translate3d(${xRatio}px, ${yRatio}px, 0)`;
-                    if (glow2) glow2.style.transform = `translate3d(${-xRatio}px, ${-yRatio}px, 0)`;
-                    if (glow3) glow3.style.transform = `translate3d(${xRatio * 0.5}px, ${yRatio * 0.5}px, 0)`;
-                    if (glow4) glow4.style.transform = `translate3d(${-xRatio * 0.8}px, ${-yRatio * 0.8}px, 0)`;
+                    const t1 = `translate3d(${xRatio}px, ${yRatio}px, 0)`;
+                    const t2 = `translate3d(${-xRatio}px, ${-yRatio}px, 0)`;
+                    const t3 = `translate3d(${xRatio * 0.5}px, ${yRatio * 0.5}px, 0)`;
+                    const t4 = `translate3d(${-xRatio * 0.8}px, ${-yRatio * 0.8}px, 0)`;
+
+                    if (glow1) { glow1.style.transform = t1; (glow1.style as any).webkitTransform = t1; }
+                    if (glow2) { glow2.style.transform = t2; (glow2.style as any).webkitTransform = t2; }
+                    if (glow3) { glow3.style.transform = t3; (glow3.style as any).webkitTransform = t3; }
+                    if (glow4) { glow4.style.transform = t4; (glow4.style as any).webkitTransform = t4; }
                     mouseTicking = false;
                 });
                 mouseTicking = true;
@@ -200,7 +209,7 @@ function App() {
                     const sections = document.querySelectorAll('section');
                     const navLinks = document.querySelectorAll('.nav-link');
                     let current = '';
-                    const scrollPos = window.pageYOffset;
+                    const scrollPos = Math.max(0, window.pageYOffset || window.scrollY || 0);
 
                     sections.forEach(section => {
                         const sectionTop = section.offsetTop;
@@ -276,16 +285,21 @@ function App() {
                     const centerY = rect.height / 2;
                     const rotateX = ((y - centerY) / centerY) * -4;
                     const rotateY = ((x - centerX) / centerX) * 4;
-                    card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.02, 1.02, 1.02)`;
+                    const transformValue = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.02, 1.02, 1.02)`;
+                    card.style.transform = transformValue;
+                    (card.style as any).webkitTransform = transformValue;
                 };
 
                 const onMouseLeave = () => {
-                    card.style.transform = `perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)`;
-                    card.style.transition = 'transform 0.5s ease';
+                    const transformValue = `perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)`;
+                    card.style.transform = transformValue;
+                    (card.style as any).webkitTransform = transformValue;
+                    card.style.transition = 'transform 0.5s ease, -webkit-transform 0.5s ease';
                 };
 
                 const onMouseEnter = () => {
                     card.style.transition = 'none';
+                    (card.style as any).webkitTransition = 'none';
                 };
 
                 card.addEventListener('mousemove', onMouseMove, { passive: true });
@@ -326,8 +340,8 @@ function App() {
             <div className="circular-text">
                 <svg viewBox="0 0 100 100">
                     <path id="circlePath" d="M 50, 50 m -35, 0 a 35,35 0 1,1 70,0 a 35,35 0 1,1 -70,0" fill="transparent" />
-                    <text>
-                        <textPath href="#circlePath" startOffset="0" textLength="219.5">
+                    <text fill={isDark ? "#f3f0fc" : "#1e1916"}>
+                        <textPath href="#circlePath" xlinkHref="#circlePath" startOffset="0" textLength="219.5">
                             WELCOME • WELCOME • WELCOME • 
                         </textPath>
                     </text>
@@ -425,8 +439,13 @@ function App() {
         {/*  Work Experience / Qualifications Section  */}
         <section className="experience" id="experience">
             <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '3rem' }}>
-                <div className="resume-dropdown-container">
-                    <button className="resume-btn" aria-label="Resume options">
+                <div className={`resume-dropdown-container ${isResumeOpen ? 'is-open' : ''}`}>
+                    <button 
+                        className="resume-btn" 
+                        aria-label="Resume options"
+                        aria-expanded={isResumeOpen}
+                        onClick={() => setIsResumeOpen(prev => !prev)}
+                    >
                         <span className="resume-btn-glow"></span>
                         <i className="fa-solid fa-file-pdf pdf-icon"></i>
                         <span className="resume-btn-text">Resume</span>
@@ -439,6 +458,7 @@ function App() {
                             target="_blank" 
                             rel="noopener noreferrer" 
                             className="resume-dropdown-item"
+                            onClick={() => setIsResumeOpen(false)}
                         >
                             <div className="item-icon-badge th-badge">TH</div>
                             <div className="item-info">
@@ -452,6 +472,7 @@ function App() {
                             target="_blank" 
                             rel="noopener noreferrer" 
                             className="resume-dropdown-item"
+                            onClick={() => setIsResumeOpen(false)}
                         >
                             <div className="item-icon-badge en-badge">EN</div>
                             <div className="item-info">
@@ -558,8 +579,8 @@ function App() {
                     {/*  Definitions for gradients and glows  */}
                     <defs>
                         <linearGradient id="line-grad-1" x1="0%" y1="0%" x2="50%" y2="100%">
-                            <stop offset="0%" stopColor="var(--accent-color)" stopOpacity="0.8" />
-                            <stop offset="100%" stopColor="var(--primary-color)" stopOpacity="0.2" />
+                            <stop offset="0%" stopColor={isDark ? "#c77dff" : "#b85d38"} stopOpacity="0.8" />
+                            <stop offset="100%" stopColor={isDark ? "#9d4edd" : "#82624d"} stopOpacity="0.2" />
                         </linearGradient>
                         <filter id="line-glow" x="-20%" y="-20%" width="140%" height="140%">
                             <feGaussianBlur stdDeviation="4" result="blur" />
@@ -772,6 +793,39 @@ function App() {
                 <div className="project-image-container">
                     <div className="project-image-glow"></div>
                     <img src="assets/Todolist.png" alt="TodoList Website Dashboard" className="project-img" loading="lazy" decoding="async" />
+                </div>
+            </div>
+
+            {/*  Project 4: Personal Portfolio  */}
+            <div className="project-item project-reverse">
+                <div className="project-content">
+                    <span className="project-tag">Featured Project</span>
+                    <h3 className="project-title">Portfolio Website</h3>
+                    <div className="project-description">
+                        <p>A modern, interactive portfolio website showcasing my skills, projects, and experiences. Built with a focus on responsive design, smooth animations, and clean user interface.</p>
+                    </div>
+                    <div className="project-tech-list">
+                        <span>React</span>
+                        <span>TypeScript</span>
+                        <span>Vite</span>
+                        <span>CSS</span>
+                    </div>
+                    <div className="project-links">
+                        <a href="https://github.com/TTthiti01/-portfolio-Thiti" target="_blank" rel="noopener noreferrer" className="proj-link" aria-label="GitHub"><i className="fa-brands fa-github"></i></a>
+                        <a href="/" target="_blank" rel="noopener noreferrer" className="proj-link" aria-label="Live Demo" title="View This Portfolio in New Tab"><i className="fa-solid fa-arrow-up-right-from-square"></i></a>
+                    </div>
+                </div>
+                <div className="project-image-container">
+                    <a href="/" target="_blank" rel="noopener noreferrer" style={{ display: 'block', width: '100%', height: '100%', cursor: 'pointer' }}>
+                        <div className="project-image-glow"></div>
+                        <img 
+                            src="assets/portfolio-dark.png" 
+                            alt="Personal Portfolio Screenshot" 
+                            className="project-img" 
+                            loading="lazy" 
+                            decoding="async" 
+                        />
+                    </a>
                 </div>
             </div>
 

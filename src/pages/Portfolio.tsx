@@ -8,6 +8,10 @@ function Portfolio() {
     const [formStatus, setFormStatus] = useState<'idle' | 'submitting' | 'success' | 'error'>('idle');
     const [projects, setProjects] = useState<any[]>([]);
     const [experiences, setExperiences] = useState<any[]>([]);
+
+    const [profile, setProfile] = useState<any>(null);
+    
+
     const formRef = useRef<HTMLFormElement>(null);
     const [githubStats, setGithubStats] = useState<{
         totalThisYear: number | string;
@@ -69,6 +73,12 @@ function Portfolio() {
     }, []);
 
     useEffect(() => {
+        
+        supabase.from("page_views").insert([{}]).then();
+        supabase.from('profile_settings').select('*').single().then(({ data }) => {
+            if (data) setProfile(data);
+        });
+        
         supabase.from('projects').select('*').order('created_at', { ascending: true }).then(({ data }) => {
             if (data) setProjects(data);
         });
@@ -414,7 +424,7 @@ function Portfolio() {
         {/*  Hero Section  */}
         <section className="hero" id="about">
             <div className="hero-intro">
-                <span className="hello-tag">Hello! I am <span className="highlight">Thitipong Songkasin (ฐิติพงษ์)</span></span>
+                <span className="hello-tag">Hello! I am <span className="highlight">{profile?.full_name || 'Thitipong Songkasin'}</span></span>
             </div>
             
             <div className="profile-container">

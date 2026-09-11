@@ -171,11 +171,12 @@ export default function AdminDashboard() {
     }
   }
 
-  const tabTitle = {
+  const tabTitles: Record<string, string> = {
     messages: 'ข้อความติดต่อ (Messages)',
     projects: 'จัดการโปรเจกต์ (Projects)',
     experience: 'ประสบการณ์ (Experiences)'
-  }[activeTab as keyof typeof tabTitle];
+  };
+  const tabTitle = tabTitles[activeTab] || '';
 
   if (loadingSession) {
     return <div className="admin-container" style={{ alignItems: 'center', justifyContent: 'center' }}>กำลังตรวจสอบสิทธิ์...</div>;
@@ -390,7 +391,7 @@ export default function AdminDashboard() {
               )}
 
               <div className="admin-message-list">
-                {experiences.map((exp, idx) => (
+                {experiences.map((exp) => (
                   <div key={exp.id} className="admin-message-card" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                     <div>
                       <h4 style={{ margin: '0 0 4px 0', color: '#fff', fontSize: '18px' }}>{exp.role}</h4>

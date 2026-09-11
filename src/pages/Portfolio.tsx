@@ -1,0 +1,807 @@
+import { useEffect, useState, useRef } from 'react';
+import emailjs from '@emailjs/browser';
+import '../index.css';
+import Preloader from '../Preloader';
+import { supabase } from '../lib/supabase';
+
+function Portfolio() {
+    const [formStatus, setFormStatus] = useState<'idle' | 'submitting' | 'success' | 'error'>('idle');
+    const [projects, setProjects] = useState<any[]>([]);
+    const [experiences, setExperiences] = useState<any[]>([]);
+    const formRef = useRef<HTMLFormElement>(null);
+    const [githubStats, setGithubStats] = useState<{
+        totalThisYear: number | string;
+        totalLastYear: number | string;
+        contribs: Array<{ date: string; count: number; level: number }>;
+        months: string[];
+    }>({
+        totalThisYear: '...',
+        totalLastYear: '...',
+        contribs: [],
+        months: ["Aug", "Sep", "Oct", "Nov", "Dec", "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug"]
+    });
+
+    const [isDark, setIsDark] = useState<boolean>(() => {
+        const saved = localStorage.getItem('theme');
+        return saved ? saved === 'dark' : false;
+    });
+
+    const [modalData, setModalData] = useState<{ title: string; subtitle: string; details: string } | null>(null);
+    const [showLogoInProfile, setShowLogoInProfile] = useState<boolean>(false);
+    const [isResumeOpen, setIsResumeOpen] = useState<boolean>(false);
+    const [typewriterText, setTypewriterText] = useState<string>('');
+
+    useEffect(() => {
+        const words = ["Computer Science Student.", "Frontend Developer.", "IT Support."];
+        let wordIndex = 0;
+        let charIndex = 0;
+        let isDeleting = false;
+        let timeoutId: any;
+
+        const type = () => {
+            const currentWord = words[wordIndex];
+
+            if (isDeleting) {
+                charIndex--;
+                setTypewriterText(currentWord.substring(0, charIndex));
+            } else {
+                charIndex++;
+                setTypewriterText(currentWord.substring(0, charIndex));
+            }
+
+            let typeSpeed = isDeleting ? 60 : 100;
+
+            if (!isDeleting && charIndex === currentWord.length) {
+                typeSpeed = 2000;
+                isDeleting = true;
+            } else if (isDeleting && charIndex === 0) {
+                isDeleting = false;
+                wordIndex = (wordIndex + 1) % words.length;
+                typeSpeed = 500;
+            }
+
+            timeoutId = setTimeout(type, typeSpeed);
+        };
+
+        type();
+
+        return () => clearTimeout(timeoutId);
+    }, []);
+
+    useEffect(() => {
+        supabase.from('projects').select('*').order('created_at', { ascending: true }).then(({ data }) => {
+            if (data) setProjects(data);
+        });
+        supabase.from('experiences').select('*').order('created_at', { ascending: true }).then(({ data }) => {
+            if (data) setExperiences(data);
+        });
+    }, []);
+
+    useEffect(() => {
+        const metaThemeColor = document.getElementById('theme-color-meta');
+        if (isDark) {
+            document.documentElement.classList.add('dark-theme');
+            document.body.classList.add('dark-theme');
+            localStorage.setItem('theme', 'dark');
+            if (metaThemeColor) metaThemeColor.setAttribute('content', '#000000');
+        } else {
+            document.documentElement.classList.remove('dark-theme');
+            document.body.classList.remove('dark-theme');
+            localStorage.setItem('theme', 'light');
+            if (metaThemeColor) metaThemeColor.setAttribute('content', '#ece5dd');
+        }
+    }, [isDark]);
+
+    useEffect(() => {
+        const username = 'TTthiti01';
+        fetch(`https://github-contributions-api.jogruber.de/v4/${username}`)
+            .then(res => res.json())
+            .then(data => {
+                if (data && Array.isArray(data.contributions) && data.contributions.length > 0) {
+                    const today = new Date();
+                    const todayStr = today.toISOString().split('T')[0];
+                    const sorted = data.contributions.sort((a: any, b: any) => a.date.localeCompare(b.date));
+                    const pastAndPresent = sorted.filter((item: any) => item.date <= todayStr);
+                    const displayContribs = pastAndPresent.slice(-371);
+                    const totalLastYear = displayContribs.reduce((sum: number, item: any) => sum + item.count, 0);
+
+                    let totalThisYear: number = 0;
+                    if (data.total) {
+                        const currentYear = today.getFullYear().toString();
+                        if (data.total[currentYear] !== undefined) {
+                            totalThisYear = Number(data.total[currentYear]);
+                        } else {
+                            totalThisYear = Object.values(data.total).reduce((a: number, b: any) => a + Number(b), 0);
+                        }
+                    } else {
+                        totalThisYear = totalLastYear;
+                    }
+
+                    const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+                    const firstDateParts = displayContribs[0].date.split('-');
+                    const startMonth = firstDateParts.length >= 2 ? (parseInt(firstDateParts[1], 10) - 1 + 12) % 12 : 0;
+                    const monthList: string[] = [];
+                    for (let i = 0; i <= 12; i++) {
+                        const mIndex = (startMonth + i) % 12;
+                        monthList.push(monthNames[mIndex]);
+                    }
+
+                    setGithubStats({
+                        totalThisYear,
+                        totalLastYear,
+                        contribs: displayContribs,
+                        months: monthList
+                    });
+                }
+            })
+            .catch(err => {
+                console.warn('Failed to fetch GitHub contributions:', err);
+            });
+    }, []);
+
+    const handleFormSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+        setFormStatus('submitting');
+
+        if (!formRef.current) return;
+
+        try {
+            const serviceId = 'service_xfqxpug';
+            const templateId = 'template_05pb6qs';
+            const publicKey = '1Rog5VkgQSDsNLzdr';
+
+            const formData = new FormData(formRef.current);
+            const name = formData.get('name') as string;
+            const email = formData.get('email') as string;
+            const message = formData.get('message') as string;
+            
+            // 1. บันทึกข้อมูลลง Supabase Database
+            const { error: supabaseError } = await supabase
+                .from('messages')
+                .insert([{ name, email, message }]);
+
+            if (supabaseError) {
+                console.error('Supabase Error:', supabaseError);
+            }
+
+            // 2. ส่งอีเมลแจ้งเตือนผ่าน EmailJS (เหมือนเดิม)
+            const templateParams = {
+                name: name,
+                email: email,
+                message: message,
+                from_name: name,
+                from_email: email,
+                reply_to: email,
+            };
+
+            const result = await emailjs.send(
+                serviceId,
+                templateId,
+                templateParams,
+                publicKey
+            );
+
+            if (result.status === 200 && !supabaseError) {
+                setFormStatus('success');
+                formRef.current.reset();
+                setTimeout(() => setFormStatus('idle'), 5000);
+            } else {
+                setFormStatus('error');
+                setTimeout(() => setFormStatus('idle'), 3000);
+            }
+        } catch (error: any) {
+            console.error('Submit Error:', error);
+            setFormStatus('error');
+            setTimeout(() => setFormStatus('idle'), 3000);
+        }
+    };
+
+    useEffect(() => {
+        const isTouchDevice = !window.matchMedia('(pointer: fine)').matches;
+
+        // Parallax background glow based on mouse movements (desktop only - throttled with rAF)
+        let mouseTicking = false;
+        const glow1 = document.querySelector('.bg-glow-1') as HTMLElement;
+        const glow2 = document.querySelector('.bg-glow-2') as HTMLElement;
+        const glow3 = document.querySelector('.bg-glow-3') as HTMLElement;
+        const glow4 = document.querySelector('.bg-glow-4') as HTMLElement;
+
+        const handleMouseMove = (e: MouseEvent) => {
+            if (!isTouchDevice && !mouseTicking) {
+                window.requestAnimationFrame(() => {
+                    const xRatio = (e.clientX / window.innerWidth - 0.5) * 35;
+                    const yRatio = (e.clientY / window.innerHeight - 0.5) * 35;
+
+                    const t1 = `translate3d(${xRatio}px, ${yRatio}px, 0)`;
+                    const t2 = `translate3d(${-xRatio}px, ${-yRatio}px, 0)`;
+                    const t3 = `translate3d(${xRatio * 0.5}px, ${yRatio * 0.5}px, 0)`;
+                    const t4 = `translate3d(${-xRatio * 0.8}px, ${-yRatio * 0.8}px, 0)`;
+
+                    if (glow1) { glow1.style.transform = t1; (glow1.style as any).webkitTransform = t1; }
+                    if (glow2) { glow2.style.transform = t2; (glow2.style as any).webkitTransform = t2; }
+                    if (glow3) { glow3.style.transform = t3; (glow3.style as any).webkitTransform = t3; }
+                    if (glow4) { glow4.style.transform = t4; (glow4.style as any).webkitTransform = t4; }
+                    mouseTicking = false;
+                });
+                mouseTicking = true;
+            }
+        };
+
+        // Throttled Scroll active navigation link via requestAnimationFrame
+        let isTicking = false;
+        const handleScroll = () => {
+            if (!isTicking) {
+                window.requestAnimationFrame(() => {
+                    const sections = document.querySelectorAll('section');
+                    const navLinks = document.querySelectorAll('.nav-link');
+                    let current = '';
+                    const scrollPos = Math.max(0, window.pageYOffset || window.scrollY || 0);
+
+                    sections.forEach(section => {
+                        const sectionTop = section.offsetTop;
+                        if (scrollPos >= (sectionTop - 150)) {
+                            current = section.getAttribute('id') || '';
+                        }
+                    });
+
+                    navLinks.forEach(link => {
+                        link.classList.remove('active');
+                        if (link.getAttribute('href')?.includes(current)) {
+                            link.classList.add('active');
+                        }
+                    });
+                    isTicking = false;
+                });
+                isTicking = true;
+            }
+        };
+
+        if (!isTouchDevice) {
+            window.addEventListener('mousemove', handleMouseMove, { passive: true });
+        }
+        window.addEventListener('scroll', handleScroll, { passive: true });
+
+        // Scroll Reveal Animations
+        const revealElements = document.querySelectorAll('.exp-card, .project-item, .contact-card, .github-card, .tech-icon-wrapper, .section-title');
+        const isMobile = window.innerWidth <= 768;
+
+        if (isMobile) {
+            revealElements.forEach(el => el.classList.add('revealed'));
+        } else {
+            const revealObserver = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (!entry.isIntersecting) return;
+                    entry.target.classList.add('revealed');
+                    observer.unobserve(entry.target);
+                });
+            }, { threshold: 0.05, rootMargin: "0px 0px 50px 0px" });
+
+            let projIndex = 0;
+            let techIndex = 0;
+
+            revealElements.forEach(el => {
+                el.classList.add('reveal-hidden');
+                if (el.classList.contains('project-item')) {
+                    if (projIndex % 2 === 0) el.classList.add('reveal-left');
+                    else el.classList.add('reveal-right');
+                    projIndex++;
+                } else if (el.classList.contains('tech-icon-wrapper')) {
+                    el.classList.add('reveal-scale');
+                    (el as HTMLElement).style.transitionDelay = `${(techIndex % 11) * 80}ms`;
+                    techIndex++;
+                } else if (el.classList.contains('exp-card')) {
+                    el.classList.add('reveal-scale');
+                }
+                revealObserver.observe(el);
+            });
+        }
+
+        // 3D Tilt Effect (Desktop only)
+        const cleanups: Array<() => void> = [];
+        if (!isTouchDevice) {
+            const tiltCards = document.querySelectorAll('.exp-card, .project-item');
+
+            tiltCards.forEach(cardEl => {
+                const card = cardEl as HTMLElement;
+                const onMouseMove = (e: MouseEvent) => {
+                    const rect = card.getBoundingClientRect();
+                    const x = e.clientX - rect.left;
+                    const y = e.clientY - rect.top;
+                    const centerX = rect.width / 2;
+                    const centerY = rect.height / 2;
+                    const rotateX = ((y - centerY) / centerY) * -4;
+                    const rotateY = ((x - centerX) / centerX) * 4;
+                    const transformValue = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.02, 1.02, 1.02)`;
+                    card.style.transform = transformValue;
+                    (card.style as any).webkitTransform = transformValue;
+                };
+
+                const onMouseLeave = () => {
+                    const transformValue = `perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)`;
+                    card.style.transform = transformValue;
+                    (card.style as any).webkitTransform = transformValue;
+                    card.style.transition = 'transform 0.5s ease, -webkit-transform 0.5s ease';
+                };
+
+                const onMouseEnter = () => {
+                    card.style.transition = 'none';
+                    (card.style as any).webkitTransition = 'none';
+                };
+
+                card.addEventListener('mousemove', onMouseMove, { passive: true });
+                card.addEventListener('mouseleave', onMouseLeave, { passive: true });
+                card.addEventListener('mouseenter', onMouseEnter, { passive: true });
+
+                cleanups.push(() => {
+                    card.removeEventListener('mousemove', onMouseMove);
+                    card.removeEventListener('mouseleave', onMouseLeave);
+                    card.removeEventListener('mouseenter', onMouseEnter);
+                });
+            });
+        }
+
+        return () => {
+            window.removeEventListener('mousemove', handleMouseMove);
+            window.removeEventListener('scroll', handleScroll);
+            cleanups.forEach(cleanup => cleanup());
+        };
+    }, []);
+
+    return (
+        <>
+            <Preloader />
+            
+    {/*  Background Glow Elements  */}
+    <div className="bg-glow bg-glow-1"></div>
+    <div className="bg-glow bg-glow-2"></div>
+    <div className="bg-glow bg-glow-3"></div>
+    <div className="bg-glow bg-glow-4"></div>
+
+    {/*  Navigation Header  */}
+    <header className="navbar" style={{'display': 'flex', 'justifyContent': 'space-between', 'alignItems': 'center'}}>
+        <div className="logo-wrapper">
+            <div className="logo">
+                <img src="assets/logo.png" alt="Thitipong Songkasin" className="logo-img" loading="eager" decoding="async" />
+            </div>
+            <div className="circular-text">
+                <svg viewBox="0 0 100 100">
+                    <path id="circlePath" d="M 50, 50 m -35, 0 a 35,35 0 1,1 70,0 a 35,35 0 1,1 -70,0" fill="transparent" />
+                    <text fill={isDark ? "#f3f0fc" : "#1e1916"}>
+                        <textPath href="#circlePath" xlinkHref="#circlePath" startOffset="0" textLength="219.5">
+                            WELCOME • WELCOME • WELCOME • 
+                        </textPath>
+                    </text>
+                </svg>
+            </div>
+        </div>
+        <button 
+            id="theme-toggle" 
+            className="theme-toggle" 
+            aria-label="Toggle theme"
+            onClick={() => setIsDark(prev => !prev)}
+        >
+            <i className={`fa-solid ${isDark ? 'fa-sun' : 'fa-moon'}`}></i>
+        </button>
+    </header>
+
+    {/*  Floating Side Navigation  */}
+    <nav className="side-nav">
+        <a href="#about" className="nav-link" aria-label="About">
+            <span className="nav-label">About</span>
+            <span className="nav-icon"><i className="fa-solid fa-user"></i></span>
+        </a>
+        <a href="#experience" className="nav-link" aria-label="Education & Skills">
+            <span className="nav-label">Education & Skills</span>
+            <span className="nav-icon"><i className="fa-solid fa-graduation-cap"></i></span>
+        </a>
+        <a href="#skills" className="nav-link" aria-label="Stack">
+            <span className="nav-label">Stack</span>
+            <span className="nav-icon"><i className="fa-solid fa-layer-group"></i></span>
+        </a>
+        <a href="#projects" className="nav-link" aria-label="Projects">
+            <span className="nav-label">Projects</span>
+            <span className="nav-icon"><i className="fa-solid fa-briefcase"></i></span>
+        </a>
+        <a href="#contact" className="nav-link" aria-label="Contact">
+            <span className="nav-label">Contact</span>
+            <span className="nav-icon"><i className="fa-solid fa-envelope"></i></span>
+        </a>
+    </nav>
+
+    {/*  Main Container  */}
+    <main className="container">
+        
+        {/*  Hero Section  */}
+        <section className="hero" id="about">
+            <div className="hero-intro">
+                <span className="hello-tag">Hello! I am <span className="highlight">Thitipong Songkasin (ฐิติพงษ์)</span></span>
+            </div>
+            
+            <div className="profile-container">
+                <div className="profile-glow"></div>
+                <div 
+                    className={`profile-card-flip ${showLogoInProfile ? 'is-flipped' : ''}`}
+                    onClick={() => setShowLogoInProfile(prev => !prev)}
+                    title="คลิกเพื่อพลิกสลับรูปโปรไฟล์ / โลโก้"
+                >
+                    <div className="profile-card-face profile-card-front">
+                        <img 
+                            src="assets/avatar.jpg" 
+                            alt="Thitipong Avatar" 
+                            className="profile-image" 
+                            loading="eager" 
+                            decoding="async" 
+                        />
+                    </div>
+                    <div className="profile-card-face profile-card-back">
+                        <img 
+                            src="assets/logo.png" 
+                            alt="Thitipong Logo" 
+                            className="profile-image logo-face-img" 
+                            loading="eager" 
+                            decoding="async" 
+                        />
+                    </div>
+                    <div className="flip-hint-badge">
+                        <i className="fa-solid fa-rotate"></i>
+                    </div>
+                </div>
+            </div>
+
+            <div className="hero-content">
+                <div className="typewriter-container">
+                    <span className="typewriter-prefix">I'm a </span>
+                    <span className="typewriter-text" id="typewriter">{typewriterText}</span>
+                </div>
+                
+                <p className="company-status">Currently, I'm a Computer Science Student at <a href="#" className="company-link">@RMUTSB</a>.</p>
+                
+                <p className="hero-desc">
+                    Computer Science student seeking an entry-level Frontend Developer or IT Support opportunity. Eager to apply React, TypeScript, responsive UI, and technical troubleshooting skills in real-world projects while continuing to grow in a collaborative software team.
+                </p>
+            </div>
+        </section>
+
+        {/*  Work Experience / Qualifications Section  */}
+        <section className="experience" id="experience">
+            <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '3rem' }}>
+                <div className={`resume-dropdown-container ${isResumeOpen ? 'is-open' : ''}`}>
+                    <button 
+                        className="resume-btn" 
+                        aria-label="Resume options"
+                        aria-expanded={isResumeOpen}
+                        onClick={() => setIsResumeOpen(prev => !prev)}
+                    >
+                        <span className="resume-btn-glow"></span>
+                        <i className="fa-solid fa-file-pdf pdf-icon"></i>
+                        <span className="resume-btn-text">Resume</span>
+                        <i className="fa-solid fa-chevron-down arrow-icon"></i>
+                    </button>
+
+                    <div className="resume-dropdown-menu">
+                        <a 
+                            href="assets/Thitipong_Songkasin_Resume_TH_With_Photo.pdf" 
+                            target="_blank" 
+                            rel="noopener noreferrer" 
+                            className="resume-dropdown-item"
+                            onClick={() => setIsResumeOpen(false)}
+                        >
+                            <div className="item-icon-badge th-badge">TH</div>
+                            <div className="item-info">
+                                <span className="item-title">Resume ภาษาไทย</span>
+                                <span className="item-sub">PDF Format &bull; Thai Version</span>
+                            </div>
+                            <i className="fa-solid fa-arrow-up-right-from-square open-icon"></i>
+                        </a>
+                        <a 
+                            href="assets/Thitipong_Songkasin_Resume_EN_With_Photo.pdf" 
+                            target="_blank" 
+                            rel="noopener noreferrer" 
+                            className="resume-dropdown-item"
+                            onClick={() => setIsResumeOpen(false)}
+                        >
+                            <div className="item-icon-badge en-badge">EN</div>
+                            <div className="item-info">
+                                <span className="item-title">Resume English</span>
+                                <span className="item-sub">PDF Format &bull; English Version</span>
+                            </div>
+                            <i className="fa-solid fa-arrow-up-right-from-square open-icon"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <h2 className="section-title">Education & Core Skills</h2>
+            <div className="experience-grid">
+                {experiences.length > 0 ? experiences.map((exp, i) => {
+                    const expIcons = [
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M22 10v6M2 10l10-5 10 5-10 5z" /><path d="M6 12v5c0 2 2 3 6 3s6-1 6-3v-5" /></svg>,
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polygon points="12 2 2 7 12 12 22 7 12 2" /><polyline points="2 17 12 22 22 17" /><polyline points="2 12 12 17 22 12" /></svg>,
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="2" y="3" width="20" height="14" rx="2" ry="2" /><line x1="8" y1="21" x2="16" y2="21" /><line x1="12" y1="17" x2="12" y2="21" /></svg>,
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10" /><line x1="2" y1="12" x2="22" y2="12" /><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" /></svg>
+                    ];
+                    return (
+                        <div key={exp.id || i} className="exp-card revealed" onClick={() => setModalData({
+                            title: exp.role,
+                            subtitle: `${exp.company} • ${exp.duration}`,
+                            details: exp.description
+                        })}>
+                            <div className="exp-icon-box">
+                                {expIcons[i % 4]}
+                            </div>
+                            <div className="exp-info">
+                                <h3>{exp.role}</h3>
+                                <p className="company-duration">{exp.company} &bull; {exp.duration}</p>
+                                <p className="exp-text">{exp.description}</p>
+                            </div>
+                        </div>
+                    );
+                }) : (
+                    <div style={{ width: '100%', gridColumn: '1 / -1', textAlign: 'center', padding: '40px', color: '#a1a1aa' }}>Loading experiences...</div>
+                )}
+
+            </div>
+        </section>
+
+        {/*  Tech Stack Connection Section  */}
+        <section className="skills-section" id="skills">
+            <h2 className="section-title" style={{'marginBottom': '4rem'}}>Core Stack</h2>
+
+            <div className="connector-diagram">
+                {/*  SVG Connector Lines  */}
+                <svg className="connector-svg" viewBox="0 0 800 300" preserveAspectRatio="none">
+                    {/*  Definitions for gradients and glows  */}
+                    <defs>
+                        <linearGradient id="line-grad-1" x1="0%" y1="0%" x2="50%" y2="100%">
+                            <stop offset="0%" stopColor={isDark ? "#c77dff" : "#b85d38"} stopOpacity="0.8" />
+                            <stop offset="100%" stopColor={isDark ? "#9d4edd" : "#82624d"} stopOpacity="0.2" />
+                        </linearGradient>
+                        <filter id="line-glow" x="-20%" y="-20%" width="140%" height="140%">
+                            <feGaussianBlur stdDeviation="4" result="blur" />
+                            <feMerge>
+                                <feMergeNode in="blur" />
+                                <feMergeNode in="SourceGraphic" />
+                            </feMerge>
+                        </filter>
+                    </defs>
+
+                    {/*  Connection Lines (Bezier Curves)  */}
+                    <path className="flow-line stretching-rope" style={{animationDelay: '0s'}} d="M 70 75 C 70 160, 400 160, 400 250" stroke="url(#line-grad-1)" strokeWidth="2" fill="none" filter="url(#line-glow)" />
+                    <path className="flow-line stretching-rope" style={{animationDelay: '-1.2s'}} d="M 135 75 C 135 160, 400 160, 400 250" stroke="url(#line-grad-1)" strokeWidth="2" fill="none" filter="url(#line-glow)" />
+                    <path className="flow-line stretching-rope" style={{animationDelay: '-2.4s'}} d="M 200 75 C 200 160, 400 160, 400 250" stroke="url(#line-grad-1)" strokeWidth="2" fill="none" filter="url(#line-glow)" />
+                    <path className="flow-line stretching-rope" style={{animationDelay: '-0.8s'}} d="M 265 75 C 265 160, 400 160, 400 250" stroke="url(#line-grad-1)" strokeWidth="2" fill="none" filter="url(#line-glow)" />
+                    <path className="flow-line stretching-rope" style={{animationDelay: '-2.0s'}} d="M 330 75 C 330 160, 400 160, 400 250" stroke="url(#line-grad-1)" strokeWidth="2" fill="none" filter="url(#line-glow)" />
+                    <path className="flow-line stretching-rope" style={{animationDelay: '-3.2s'}} d="M 395 75 C 395 160, 400 160, 400 250" stroke="url(#line-grad-1)" strokeWidth="2" fill="none" filter="url(#line-glow)" />
+                    <path className="flow-line stretching-rope" style={{animationDelay: '-1.6s'}} d="M 460 75 C 460 160, 400 160, 400 250" stroke="url(#line-grad-1)" strokeWidth="2" fill="none" filter="url(#line-glow)" />
+                    <path className="flow-line stretching-rope" style={{animationDelay: '-2.8s'}} d="M 525 75 C 525 160, 400 160, 400 250" stroke="url(#line-grad-1)" strokeWidth="2" fill="none" filter="url(#line-glow)" />
+                    <path className="flow-line stretching-rope" style={{animationDelay: '-0.4s'}} d="M 590 75 C 590 160, 400 160, 400 250" stroke="url(#line-grad-1)" strokeWidth="2" fill="none" filter="url(#line-glow)" />
+                    <path className="flow-line stretching-rope" style={{animationDelay: '-1.8s'}} d="M 655 75 C 655 160, 400 160, 400 250" stroke="url(#line-grad-1)" strokeWidth="2" fill="none" filter="url(#line-glow)" />
+                    <path className="flow-line stretching-rope" style={{animationDelay: '-3.0s'}} d="M 720 75 C 720 160, 400 160, 400 250" stroke="url(#line-grad-1)" strokeWidth="2" fill="none" filter="url(#line-glow)" />
+                </svg>
+
+                {/*  Icons positioned over SVG curve start points  */}
+                <div className="tech-icons-row">
+                    <div className="tech-icon-wrapper" data-name="HTML5" style={{'left': '8.75%'}}>
+                        <div className="floating-wrapper" style={{animationDelay: '0s'}}><div className="tech-icon"><i className="fa-brands fa-html5" style={{'color': '#e34c26'}}></i></div></div>
+                    </div>
+                    <div className="tech-icon-wrapper" data-name="CSS3" style={{'left': '16.875%'}}>
+                        <div className="floating-wrapper" style={{animationDelay: '-1.2s'}}><div className="tech-icon"><i className="fa-brands fa-css3-alt" style={{'color': '#264de4'}}></i></div></div>
+                    </div>
+                    <div className="tech-icon-wrapper" data-name="JavaScript" style={{'left': '25%'}}>
+                        <div className="floating-wrapper" style={{animationDelay: '-2.4s'}}><div className="tech-icon"><i className="fa-brands fa-js" style={{'color': '#f7df1e'}}></i></div></div>
+                    </div>
+                    <div className="tech-icon-wrapper" data-name="TypeScript" style={{'left': '33.125%'}}>
+                        <div className="floating-wrapper" style={{animationDelay: '-0.8s'}}><div className="tech-icon"><i className="fa-solid fa-code" style={{'color': '#3178c6'}}></i></div></div>
+                    </div>
+                    <div className="tech-icon-wrapper" data-name="React" style={{'left': '41.25%'}}>
+                        <div className="floating-wrapper" style={{animationDelay: '-2.0s'}}><div className="tech-icon"><i className="fa-brands fa-react" style={{'color': '#61dafb'}}></i></div></div>
+                    </div>
+                    <div className="tech-icon-wrapper" data-name="Next.js" style={{'left': '49.375%'}}>
+                        <div className="floating-wrapper" style={{animationDelay: '-3.2s'}}><div className="tech-icon"><i className="fa-solid fa-cube" style={{'color': '#999'}}></i></div></div>
+                    </div>
+                    <div className="tech-icon-wrapper" data-name="Tailwind CSS" style={{'left': '57.5%'}}>
+                        <div className="floating-wrapper" style={{animationDelay: '-1.6s'}}><div className="tech-icon"><i className="fa-solid fa-wind" style={{'color': '#38bdf8'}}></i></div></div>
+                    </div>
+                    <div className="tech-icon-wrapper" data-name="Node.js" style={{'left': '65.625%'}}>
+                        <div className="floating-wrapper" style={{animationDelay: '-2.8s'}}><div className="tech-icon"><i className="fa-brands fa-node-js" style={{'color': '#339933'}}></i></div></div>
+                    </div>
+                    <div className="tech-icon-wrapper" data-name="TensorFlow AI" style={{'left': '73.75%'}}>
+                        <div className="floating-wrapper" style={{animationDelay: '-0.4s'}}><div className="tech-icon"><i className="fa-solid fa-brain" style={{'color': '#ff6f00'}}></i></div></div>
+                    </div>
+                    <div className="tech-icon-wrapper" data-name="Redis" style={{'left': '81.875%'}}>
+                        <div className="floating-wrapper" style={{animationDelay: '-1.8s'}}><div className="tech-icon"><i className="fa-solid fa-database" style={{'color': '#dc382d'}}></i></div></div>
+                    </div>
+                    <div className="tech-icon-wrapper" data-name="Git" style={{'left': '90%'}}>
+                        <div className="floating-wrapper" style={{animationDelay: '-3.0s'}}><div className="tech-icon"><i className="fa-brands fa-git-alt" style={{'color': '#f05032'}}></i></div></div>
+                    </div>
+                </div>
+
+                {/*  Central Badge (Ending point of curves)  */}
+                <div className="central-badge-container">
+                    <div className="central-badge-glow"></div>
+                    <div className="central-badge">
+                        <img src="assets/logo.png" alt="Thitipong Songkasin" className="central-badge-img" loading="lazy" decoding="async" />
+                    </div>
+                    {/*  Orbit Rings decoration  */}
+                    <div className="orbit-ring orbit-1"></div>
+                    <div className="orbit-ring orbit-2"></div>
+                </div>
+            </div>
+        </section>
+
+        {/*  GitHub Contributions Section  */}
+        <section className="github-section" id="github-contributions">
+            <h2 className="section-title">GitHub Activity</h2>
+            <div className="github-card">
+                <div className="custom-contrib-card">
+                    <div className="cc-header">
+                        <div className="cc-profile">
+                            <div className="cc-avatar-box">
+                                <i className="fa-brands fa-github"></i>
+                            </div>
+                            <div className="cc-user-info">
+                                <a href="https://github.com/TTthiti01" target="_blank" rel="noopener noreferrer" className="cc-username">@TTthiti01</a>
+                                <span className="cc-subtitle">Contribution Graph</span>
+                            </div>
+                        </div>
+                        <div className="cc-stats">
+                            <span className="cc-stat-num">{githubStats.totalThisYear}</span>
+                            <span className="cc-stat-label">THIS YEAR TOTAL</span>
+                        </div>
+                    </div>
+                    
+                    <div className="cc-grid-wrapper">
+                        <div className="cc-months-row">
+                            {githubStats.months.map((m, idx) => (
+                                <span key={idx}>{m}</span>
+                            ))}
+                        </div>
+                        <div className="cc-grid">
+                            {githubStats.contribs.map((day, idx) => (
+                                <span 
+                                    key={idx} 
+                                    className="cc-square" 
+                                    data-level={day.level} 
+                                    title={`${day.count} contributions on ${day.date}`}
+                                />
+                            ))}
+                        </div>
+                    </div>
+                    
+                    <div className="cc-footer">
+                        <div className="cc-last-year-count">
+                            <span>{githubStats.totalLastYear}</span> contributions in the last year
+                        </div>
+                        <div className="cc-legend">
+                            <span>Less</span>
+                            <span className="cc-legend-sq lvl-0"></span>
+                            <span className="cc-legend-sq lvl-1"></span>
+                            <span className="cc-legend-sq lvl-2"></span>
+                            <span className="cc-legend-sq lvl-3"></span>
+                            <span className="cc-legend-sq lvl-4"></span>
+                            <span>More</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        {/*  Featured Projects Section  */}
+        <section className="projects-section" id="projects">
+            
+            {projects.length > 0 ? projects.map((proj, index) => (
+                <div className={`project-item ${index % 2 !== 0 ? 'project-reverse' : ''}`} key={proj.id || index}>
+                    <div className="project-content">
+                        <span className="project-tag">Featured Project</span>
+                        <h3 className="project-title">{proj.title}</h3>
+                        <div className="project-description">
+                            <p>{proj.description}</p>
+                        </div>
+                        <div className="project-tech-list">
+                            {proj.tech_stack?.map((tech: string, i: number) => (
+                                <span key={i}>{tech}</span>
+                            ))}
+                        </div>
+                        <div className="project-links">
+                            {proj.github_url && (
+                                <a href={proj.github_url} target="_blank" rel="noopener noreferrer" className="proj-link" aria-label="GitHub"><i className="fa-brands fa-github"></i></a>
+                            )}
+                            {proj.demo_url && (
+                                <a href={proj.demo_url} target="_blank" rel="noopener noreferrer" className="proj-link" aria-label="Live Demo"><i className="fa-solid fa-arrow-up-right-from-square"></i></a>
+                            )}
+                        </div>
+                    </div>
+                    <div className="project-image-container">
+                        {proj.demo_url ? (
+                            <a href={proj.demo_url} target="_blank" rel="noopener noreferrer" style={{ display: 'block', width: '100%', height: '100%', cursor: 'pointer' }}>
+                                <div className="project-image-glow"></div>
+                                <img src={proj.image_url?.startsWith('http') ? proj.image_url : proj.image_url?.startsWith('/') ? proj.image_url : `/${proj.image_url}`} alt={proj.title} className="project-img" loading="lazy" decoding="async" />
+                            </a>
+                        ) : (
+                            <div style={{ display: 'block', width: '100%', height: '100%' }}>
+                                <div className="project-image-glow"></div>
+                                <img src={proj.image_url?.startsWith('http') ? proj.image_url : proj.image_url?.startsWith('/') ? proj.image_url : `/${proj.image_url}`} alt={proj.title} className="project-img" loading="lazy" decoding="async" />
+                            </div>
+                        )}
+                    </div>
+                </div>
+            )) : (
+                <div style={{ textAlign: 'center', color: '#a1a1aa', padding: '40px' }}>Loading projects...</div>
+            )}
+
+
+
+            </section>
+
+        {/*  Contact Section  */}
+        <section className="contact-section" id="contact">
+            <h2 className="section-title">Contact</h2>
+            <div className="contact-card">
+                <p className="contact-sub">Let's Connect and Create Impact!</p>
+                <p className="contact-text">I am actively seeking an entry-level opportunity as a Frontend Developer or IT Support Specialist. I am eager to apply my technical skills, problem-solving mindset, and passion for technology to a collaborative team. Whether it's building user-friendly web applications or handling technical diagnostics, I'm ready to contribute. Feel free to reach out!</p>
+                
+                <div style={{'display': 'flex', 'justifyContent': 'center', 'gap': '2rem', 'marginBottom': '2rem', 'flexWrap': 'wrap'}}>
+                    <a href="https://mail.google.com/mail/?view=cm&fs=1&to=job2547j@Gmail.com" target="_blank" rel="noopener noreferrer" style={{'color': 'var(--text-muted)', 'textDecoration': 'none', 'fontWeight': '600'}}>
+                        <i className="fa-solid fa-envelope" style={{'marginRight': '8px', 'color': 'var(--accent-color)'}}></i>job2547j@Gmail.com
+                    </a>
+                    <span style={{'color': 'var(--text-muted)', 'fontWeight': '600'}}><i className="fa-solid fa-phone" style={{'marginRight': '8px', 'color': 'var(--accent-color)'}}></i>062-373-2491</span>
+                </div>
+                
+                {/* Contact Form using EmailJS */}
+                <form ref={formRef} className="contact-form" onSubmit={handleFormSubmit}>
+                    <div className="form-group">
+                        <label className="form-label" htmlFor="name">Name <span className="asterisk">*</span></label>
+                        <input type="text" id="name" name="name" className="form-input" placeholder="Your name" required />
+                    </div>
+                    
+                    <div className="form-group">
+                        <label className="form-label" htmlFor="email">Email <span className="asterisk">*</span></label>
+                        <div className="input-wrapper">
+                            <i className="fa-regular fa-envelope input-icon"></i>
+                            <input type="email" id="email" name="email" className="form-input" placeholder="you@email.com" required />
+                        </div>
+                    </div>
+                    
+                    <div className="form-group">
+                        <label className="form-label" htmlFor="message">Message <span className="asterisk">*</span></label>
+                        <textarea id="message" name="message" className="form-textarea" placeholder="Tell me about your project or idea..." required></textarea>
+                    </div>
+                    
+                    <button type="submit" className={`submit-btn ${formStatus === 'success' ? 'btn-success' : formStatus === 'error' ? 'btn-error' : ''}`} disabled={formStatus === 'submitting' || formStatus === 'success'}>
+                        {formStatus === 'idle' && <><i className="fa-solid fa-paper-plane"></i> Send message</>}
+                        {formStatus === 'submitting' && <><i className="fa-solid fa-spinner fa-spin"></i> Sending...</>}
+                        {formStatus === 'success' && <><i className="fa-solid fa-check"></i> Sent Successfully!</>}
+                        {formStatus === 'error' && <><i className="fa-solid fa-circle-exclamation"></i> Error, try again</>}
+                    </button>
+                </form>
+
+            </div>
+        </section>
+
+    </main>
+
+    {/*  Footer with Giant Text  */}
+    <footer className="footer-section">
+        <h1 className="footer-giant-text">THITIPONG</h1>
+    </footer>
+
+    {/*  Generic Modal for Experience Details  */}
+    <div id="exp-modal" className={`modal-overlay ${modalData ? 'active' : ''}`} onClick={(e) => {
+        if (e.target === e.currentTarget) setModalData(null);
+    }}>
+        <div className="modal-content">
+            <button className="modal-close" onClick={() => setModalData(null)}><i className="fa-solid fa-xmark"></i></button>
+            <h3 id="modal-title">{modalData?.title || 'Title'}</h3>
+            <p id="modal-subtitle" className="company-duration">{modalData?.subtitle || 'Subtitle'}</p>
+            <div id="modal-body" className="exp-details-modal">
+                {modalData?.details}
+            </div>
+        </div>
+    </div>
+
+    {/*  Custom JS  */}
+    
+        </>
+    );
+}
+
+export default Portfolio;

@@ -74,13 +74,58 @@ function Portfolio() {
 
     useEffect(() => {
         
-        supabase.from("page_views").insert([{}]).then();
+        async function recordPageView() {
+            try {
+                let country = 'Unknown';
+                let city = 'Unknown';
+                try {
+                    const res = await fetch('https://ipapi.co/json/');
+                    const data = await res.json();
+                    if (data.country_name) {
+                        country = data.country_name;
+                        city = data.city;
+                    }
+                } catch (e) {}
+        
+                const ua = navigator.userAgent;
+                let os = 'Unknown';
+                if (ua.indexOf('Win') !== -1) os = 'Windows';
+                else if (ua.indexOf('Mac') !== -1) os = 'MacOS';
+                else if (ua.indexOf('Android') !== -1) os = 'Android';
+                else if (ua.indexOf('like Mac') !== -1) os = 'iOS';
+                else if (ua.indexOf('Linux') !== -1) os = 'Linux';
+        
+                let browser = 'Unknown';
+                if (ua.indexOf('Edge') !== -1) browser = 'Edge';
+                else if (ua.indexOf('Chrome') !== -1) browser = 'Chrome';
+                else if (ua.indexOf('Safari') !== -1) browser = 'Safari';
+                else if (ua.indexOf('Firefox') !== -1) browser = 'Firefox';
+        
+                let device_type = /Mobile|Android|iP(hone|od|ad)/i.test(ua) ? 'Mobile' : 'Desktop';
+        
+                await supabase.from("page_views").insert([{
+                    browser,
+                    os,
+                    device_type,
+                    country,
+                    city,
+                    referrer: document.referrer || 'Direct'
+                }]);
+            } catch (err) {
+                console.error("Failed to record page view", err);
+            }
+        }
+        
+        recordPageView();
         supabase.from('profile_settings').select('*').single().then(({ data }) => {
             if (data) setProfile(data);
         });
         
         supabase.from('projects').select('*').order('created_at', { ascending: true }).then(({ data }) => {
-            if (data) setProjects(data);
+            if (data) {
+                const visibleProjects = data.filter(p => !p.is_hidden);
+                setProjects(visibleProjects);
+            }
         });
         supabase.from('experiences').select('*').order('created_at', { ascending: true }).then(({ data }) => {
             if (data) setExperiences(data);

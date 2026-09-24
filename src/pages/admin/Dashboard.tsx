@@ -11,13 +11,15 @@ export default function AdminDashboard() {
   
   const [isAddingProject, setIsAddingProject] = useState(false);
   const [editingProjectId, setEditingProjectId] = useState<string | null>(null);
-  const [newProject, setNewProject] = useState({ title: '', description: '', image_url: '', tech_stack: '', demo_url: '', github_url: '' });
+  const [newProject, setNewProject] = useState({ title: '', description: '', image_url: '', tech_stack: '', demo_url: '', github_url: '', is_hidden: false });
 
   const [isAddingExperience, setIsAddingExperience] = useState(false);
   const [editingExperienceId, setEditingExperienceId] = useState<string | null>(null);
   const [newExperience, setNewExperience] = useState({ role: '', company: '', duration: '', description: '' });
 
   const [pageViews, setPageViews] = useState(0);
+  const [recentVisitors, setRecentVisitors] = useState<any[]>([]);
+
   const [profile, setProfile] = useState<any>(null);
   const [skills, setSkills] = useState<any[]>([]);
   const [newSkill, setNewSkill] = useState({ name: '', icon_name: '', category: 'frontend' });
@@ -77,6 +79,9 @@ export default function AdminDashboard() {
   async function fetchAnalytics() {
     const { count } = await supabase.from('page_views').select('*', { count: 'exact', head: true });
     setPageViews(count || 0);
+
+    const { data } = await supabase.from('page_views').select('*').order('created_at', { ascending: false }).limit(20);
+    if (data) setRecentVisitors(data);
   }
   async function fetchProfile() {
     const { data } = await supabase.from('profile_settings').select('*').single();
@@ -135,7 +140,8 @@ export default function AdminDashboard() {
       image_url: proj.image_url || '',
       tech_stack: Array.isArray(proj.tech_stack) ? proj.tech_stack.join(', ') : '',
       demo_url: proj.demo_url || '',
-      github_url: proj.github_url || ''
+      github_url: proj.github_url || '',
+      is_hidden: proj.is_hidden || false
     });
     setEditingProjectId(proj.id);
     setIsAddingProject(true);
@@ -143,9 +149,19 @@ export default function AdminDashboard() {
   }
 
   function cancelForm() {
-    setNewProject({ title: '', description: '', image_url: '', tech_stack: '', demo_url: '', github_url: '' });
+    setNewProject({ title: '', description: '', image_url: '', tech_stack: '', demo_url: '', github_url: '', is_hidden: false });
     setEditingProjectId(null);
     setIsAddingProject(false);
+  }
+
+  async function toggleHideProject(id: string, currentStatus: boolean) {
+    const { error } = await supabase.from('projects').update({ is_hidden: !currentStatus }).eq('id', id);
+    if (!error) {
+      fetchProjects();
+    } else {
+      console.error(error);
+      alert('เกิดข้อผิดพลาดในการเปลี่ยนสถานะการซ่อน: ' + error.message);
+    }
   }
 
   async function handleDeleteProject(id: string) {
@@ -340,8 +356,9 @@ export default function AdminDashboard() {
         <div className="admin-content">
 
           {activeTab === 'overview' && (
-            <div className="admin-stats-grid">
-              <div className="admin-stat-card">
+            <>
+              <div className="admin-stats-grid">
+                <div className="admin-stat-card">
                 <div className="admin-stat-icon">
                   <BarChart3 size={24} />
                 </div>
@@ -369,6 +386,37 @@ export default function AdminDashboard() {
                 </div>
               </div>
             </div>
+            
+            <div className="admin-message-card" style={{ marginTop: '24px' }}>
+              <h3 style={{ margin: '0 0 16px 0', color: '#fff', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <BarChart3 size={20} /> รายละเอียดผู้เข้าชมล่าสุด (20 คนล่าสุด)
+              </h3>
+              <div style={{ overflowX: 'auto' }}>
+                <table style={{ width: '100%', borderCollapse: 'collapse', color: '#fff', fontSize: '14px' }}>
+                  <thead>
+                    <tr style={{ borderBottom: '1px solid #3f3f46', textAlign: 'left', color: '#a1a1aa' }}>
+                      <th style={{ padding: '12px 8px' }}>เวลาเข้าชม</th>
+                      <th style={{ padding: '12px 8px' }}>อุปกรณ์/ระบบปฏิบัติการ</th>
+                      <th style={{ padding: '12px 8px' }}>เบราว์เซอร์</th>
+                      <th style={{ padding: '12px 8px' }}>สถานที่ (ประเทศ/เมือง)</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {recentVisitors.length > 0 ? recentVisitors.map((v, i) => (
+                      <tr key={v.id || i} style={{ borderBottom: '1px solid #27272a' }}>
+                        <td style={{ padding: '12px 8px' }}>{new Date(v.created_at).toLocaleString('th-TH')}</td>
+                        <td style={{ padding: '12px 8px' }}>{v.device_type || 'Unknown'} / {v.os || 'Unknown'}</td>
+                        <td style={{ padding: '12px 8px' }}>{v.browser || 'Unknown'}</td>
+                        <td style={{ padding: '12px 8px' }}>{v.country || 'Unknown'} {v.city ? `(${v.city})` : ''}</td>
+                      </tr>
+                    )) : (
+                      <tr><td colSpan={4} style={{ padding: '12px 8px', textAlign: 'center', color: '#a1a1aa' }}>ไม่มีข้อมูลผู้เข้าชมใหม่ หรือยังไม่ได้เพิ่มคอลัมน์ในฐานข้อมูล</td></tr>
+                    )}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+            </>
           )}
 
           {activeTab === 'profile' && profile && (
@@ -540,6 +588,16 @@ export default function AdminDashboard() {
                   <input type="text" placeholder="ลิงก์ดูของจริง (Demo URL) - ไม่บังคับ" value={newProject.demo_url} onChange={e => setNewProject({...newProject, demo_url: e.target.value})} className="admin-input" />
                   <input type="text" placeholder="ลิงก์ GitHub - ไม่บังคับ" value={newProject.github_url} onChange={e => setNewProject({...newProject, github_url: e.target.value})} className="admin-input" />
                   
+                  <label style={{ display: 'flex', alignItems: 'center', gap: '8px', color: '#fff', cursor: 'pointer' }}>
+                    <input 
+                      type="checkbox" 
+                      checked={newProject.is_hidden || false} 
+                      onChange={e => setNewProject({...newProject, is_hidden: e.target.checked})} 
+                      style={{ width: '18px', height: '18px', cursor: 'pointer' }}
+                    />
+                    ซ่อนโปรเจกต์นี้ (ไม่ให้แสดงหน้าแรก)
+                  </label>
+                  
                   <div style={{ display: 'flex', gap: '12px', marginTop: '8px' }}>
                     <button type="submit" style={{ flex: 1, background: '#b85d38', color: '#fff', border: 'none', padding: '12px', borderRadius: '8px', cursor: 'pointer', fontWeight: 'bold' }}>
                       {editingProjectId ? 'บันทึกการแก้ไข' : 'บันทึกโปรเจกต์ลงฐานข้อมูล'}
@@ -559,7 +617,10 @@ export default function AdminDashboard() {
                     {proj.image_url && (
                       <img src={proj.image_url.startsWith('http') ? proj.image_url : proj.image_url.startsWith('/') ? proj.image_url : `/${proj.image_url}`} alt={proj.title} style={{ width: '100%', height: '150px', objectFit: 'cover', borderRadius: '8px', marginBottom: '16px' }} />
                     )}
-                    <h4 style={{ margin: '0 0 8px 0', color: '#fff', fontSize: '18px' }}>{proj.title}</h4>
+                    <h4 style={{ margin: '0 0 8px 0', color: '#fff', fontSize: '18px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                      {proj.title}
+                      {proj.is_hidden && <span style={{ background: '#ef4444', color: '#fff', fontSize: '12px', padding: '2px 8px', borderRadius: '12px' }}>ซ่อนอยู่</span>}
+                    </h4>
                     <p style={{ color: '#a1a1aa', fontSize: '14px', flex: 1, margin: '0 0 16px 0' }}>{proj.description}</p>
                     
                     <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px', marginBottom: '16px' }}>
@@ -569,6 +630,9 @@ export default function AdminDashboard() {
                     </div>
                     
                     <div style={{ display: 'flex', gap: '8px', marginTop: 'auto' }}>
+                      <button onClick={() => toggleHideProject(proj.id, proj.is_hidden)} style={{ flex: 1, background: proj.is_hidden ? '#059669' : '#b85d38', color: '#fff', border: 'none', padding: '8px', borderRadius: '6px', cursor: 'pointer', fontWeight: 'bold' }}>
+                        {proj.is_hidden ? 'แสดง' : 'ซ่อน'}
+                      </button>
                       <button onClick={() => startEdit(proj)} style={{ flex: 1, background: '#27272a', color: '#fff', border: 'none', padding: '8px', borderRadius: '6px', cursor: 'pointer', fontWeight: 'bold' }}>
                         แก้ไข
                       </button>

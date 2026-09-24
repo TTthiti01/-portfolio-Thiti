@@ -80,7 +80,7 @@ export default function AdminDashboard() {
     const { count } = await supabase.from('page_views').select('*', { count: 'exact', head: true });
     setPageViews(count || 0);
 
-    const { data } = await supabase.from('page_views').select('*').order('created_at', { ascending: false }).limit(20);
+    const { data } = await supabase.from('page_views').select('*').order('created_at', { ascending: false, nullsFirst: false }).limit(20);
     if (data) setRecentVisitors(data);
   }
   async function fetchProfile() {

@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { supabase } from '../../lib/supabase';
 import { Mail, Briefcase, GraduationCap, LogOut, LayoutDashboard, BarChart3, User, Award } from 'lucide-react';
 import AdminLogin from './Login';
+import ImageUpload from './ImageUpload';
 import './Admin.css';
 
 export default function AdminDashboard() {
@@ -450,7 +451,8 @@ export default function AdminDashboard() {
                 <form onSubmit={handleSaveProfile} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
                   <input type="text" placeholder="ชื่อ-นามสกุล" required value={profile.full_name} onChange={e => setProfile({...profile, full_name: e.target.value})} className="admin-input" />
                   <textarea placeholder="คำอธิบาย (Bio)" required rows={4} value={profile.bio} onChange={e => setProfile({...profile, bio: e.target.value})} className="admin-input" />
-                  <input type="text" placeholder="ลิงก์ไฟล์ Resume (วาง URL หรือชื่อไฟล์ใน Storage)" value={profile.resume_url || ''} onChange={e => setProfile({...profile, resume_url: e.target.value})} className="admin-input" />
+                  <ImageUpload folder="profile" placeholder="URL รูปโปรไฟล์ หรือกด เลือกไฟล์" value={profile.profile_image_url || ''} onChange={url => setProfile({...profile, profile_image_url: url})} />
+                  <ImageUpload folder="resume" accept="application/pdf" placeholder="ลิงก์ไฟล์ Resume (วาง URL หรือกด เลือกไฟล์ PDF)" value={profile.resume_url || ''} onChange={url => setProfile({...profile, resume_url: url})} />
                   
                   <div style={{ display: 'flex', gap: '12px', marginTop: '8px' }}>
                     <button type="submit" style={{ flex: 1, background: '#b85d38', color: '#fff', border: 'none', padding: '12px', borderRadius: '8px', cursor: 'pointer', fontWeight: 'bold' }}>
@@ -583,7 +585,7 @@ export default function AdminDashboard() {
                   
                   <input type="text" placeholder="ชื่อโปรเจกต์ (เช่น TripShare)" required value={newProject.title} onChange={e => setNewProject({...newProject, title: e.target.value})} className="admin-input" />
                   <textarea placeholder="รายละเอียดโปรเจกต์..." required rows={3} value={newProject.description} onChange={e => setNewProject({...newProject, description: e.target.value})} className="admin-input" />
-                  <input type="text" placeholder="URL รูปภาพ (เช่น assets/trip.png หรือลิงก์เว็บ)" value={newProject.image_url} onChange={e => setNewProject({...newProject, image_url: e.target.value})} className="admin-input" />
+                  <ImageUpload folder="projects" placeholder="URL รูปภาพ หรือกด เลือกไฟล์ (เช่น assets/trip.png)" value={newProject.image_url} onChange={url => setNewProject({...newProject, image_url: url})} />
                   <input type="text" placeholder="เครื่องมือที่ใช้ (คั่นด้วยลูกน้ำ เช่น React, Vite, Tailwind)" value={newProject.tech_stack} onChange={e => setNewProject({...newProject, tech_stack: e.target.value})} className="admin-input" />
                   <input type="text" placeholder="ลิงก์ดูของจริง (Demo URL) - ไม่บังคับ" value={newProject.demo_url} onChange={e => setNewProject({...newProject, demo_url: e.target.value})} className="admin-input" />
                   <input type="text" placeholder="ลิงก์ GitHub - ไม่บังคับ" value={newProject.github_url} onChange={e => setNewProject({...newProject, github_url: e.target.value})} className="admin-input" />

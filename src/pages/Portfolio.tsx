@@ -36,7 +36,7 @@ function Portfolio() {
     const [typewriterText, setTypewriterText] = useState<string>('');
 
     useEffect(() => {
-        const words = ["Computer Science Student.", "Frontend Developer.", "IT Support."];
+        const words = ["Computer Science Student.", "Full-Stack Developer.", "IT Support."];
         let wordIndex = 0;
         let charIndex = 0;
         let isDeleting = false;
@@ -512,7 +512,7 @@ function Portfolio() {
                 <p className="company-status">Currently, I'm a Computer Science Student at <a href="#" className="company-link">@RMUTSB</a>.</p>
                 
                 <p className="hero-desc">
-                    Computer Science student seeking an entry-level Frontend Developer or IT Support opportunity. Eager to apply React, TypeScript, responsive UI, and technical troubleshooting skills in real-world projects while continuing to grow in a collaborative software team.
+                    Computer Science student seeking an entry-level Full-Stack Developer or IT Support opportunity. Eager to apply React, TypeScript, Supabase (PostgreSQL), responsive UI, and technical troubleshooting skills in real-world projects while continuing to grow in a collaborative software team.
                 </p>
             </div>
         </section>
@@ -650,20 +650,20 @@ function Portfolio() {
                     <div className="tech-icon-wrapper" data-name="React" style={{'left': '41.25%'}}>
                         <div className="floating-wrapper" style={{animationDelay: '-2.0s'}}><div className="tech-icon"><i className="fa-brands fa-react" style={{'color': '#61dafb'}}></i></div></div>
                     </div>
-                    <div className="tech-icon-wrapper" data-name="Next.js" style={{'left': '49.375%'}}>
-                        <div className="floating-wrapper" style={{animationDelay: '-3.2s'}}><div className="tech-icon"><i className="fa-solid fa-cube" style={{'color': '#999'}}></i></div></div>
+                    <div className="tech-icon-wrapper" data-name="React Native" style={{'left': '49.375%'}}>
+                        <div className="floating-wrapper" style={{animationDelay: '-3.2s'}}><div className="tech-icon"><i className="fa-solid fa-mobile-screen" style={{'color': '#61dafb'}}></i></div></div>
                     </div>
-                    <div className="tech-icon-wrapper" data-name="Tailwind CSS" style={{'left': '57.5%'}}>
-                        <div className="floating-wrapper" style={{animationDelay: '-1.6s'}}><div className="tech-icon"><i className="fa-solid fa-wind" style={{'color': '#38bdf8'}}></i></div></div>
+                    <div className="tech-icon-wrapper" data-name="Vite" style={{'left': '57.5%'}}>
+                        <div className="floating-wrapper" style={{animationDelay: '-1.6s'}}><div className="tech-icon"><i className="fa-solid fa-bolt" style={{'color': '#646cff'}}></i></div></div>
                     </div>
-                    <div className="tech-icon-wrapper" data-name="Node.js" style={{'left': '65.625%'}}>
-                        <div className="floating-wrapper" style={{animationDelay: '-2.8s'}}><div className="tech-icon"><i className="fa-brands fa-node-js" style={{'color': '#339933'}}></i></div></div>
+                    <div className="tech-icon-wrapper" data-name="Supabase" style={{'left': '65.625%'}}>
+                        <div className="floating-wrapper" style={{animationDelay: '-2.8s'}}><div className="tech-icon"><i className="fa-solid fa-server" style={{'color': '#3ecf8e'}}></i></div></div>
                     </div>
-                    <div className="tech-icon-wrapper" data-name="TensorFlow AI" style={{'left': '73.75%'}}>
-                        <div className="floating-wrapper" style={{animationDelay: '-0.4s'}}><div className="tech-icon"><i className="fa-solid fa-brain" style={{'color': '#ff6f00'}}></i></div></div>
+                    <div className="tech-icon-wrapper" data-name="PostgreSQL" style={{'left': '73.75%'}}>
+                        <div className="floating-wrapper" style={{animationDelay: '-0.4s'}}><div className="tech-icon"><i className="fa-solid fa-database" style={{'color': '#336791'}}></i></div></div>
                     </div>
-                    <div className="tech-icon-wrapper" data-name="Redis" style={{'left': '81.875%'}}>
-                        <div className="floating-wrapper" style={{animationDelay: '-1.8s'}}><div className="tech-icon"><i className="fa-solid fa-database" style={{'color': '#dc382d'}}></i></div></div>
+                    <div className="tech-icon-wrapper" data-name="Vercel" style={{'left': '81.875%'}}>
+                        <div className="floating-wrapper" style={{animationDelay: '-1.8s'}}><div className="tech-icon"><i className="fa-solid fa-cloud" style={{'color': '#999'}}></i></div></div>
                     </div>
                     <div className="tech-icon-wrapper" data-name="Git" style={{'left': '90%'}}>
                         <div className="floating-wrapper" style={{animationDelay: '-3.0s'}}><div className="tech-icon"><i className="fa-brands fa-git-alt" style={{'color': '#f05032'}}></i></div></div>
@@ -792,7 +792,7 @@ function Portfolio() {
             <h2 className="section-title">Contact</h2>
             <div className="contact-card">
                 <p className="contact-sub">Let's Connect and Create Impact!</p>
-                <p className="contact-text">I am actively seeking an entry-level opportunity as a Frontend Developer or IT Support Specialist. I am eager to apply my technical skills, problem-solving mindset, and passion for technology to a collaborative team. Whether it's building user-friendly web applications or handling technical diagnostics, I'm ready to contribute. Feel free to reach out!</p>
+                <p className="contact-text">I am actively seeking an entry-level opportunity as a Full-Stack Developer or IT Support Specialist. I am eager to apply my technical skills, problem-solving mindset, and passion for technology to a collaborative team. Whether it's building user-friendly web applications or handling technical diagnostics, I'm ready to contribute. Feel free to reach out!</p>
                 
                 <div style={{'display': 'flex', 'justifyContent': 'center', 'gap': '2rem', 'marginBottom': '2rem', 'flexWrap': 'wrap'}}>
                     <a href="https://mail.google.com/mail/?view=cm&fs=1&to=job2547j@Gmail.com" target="_blank" rel="noopener noreferrer" style={{'color': 'var(--text-muted)', 'textDecoration': 'none', 'fontWeight': '600'}}>

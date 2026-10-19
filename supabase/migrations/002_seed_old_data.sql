@@ -6,7 +6,7 @@
 -- Profile (replaces the placeholder row created by 001_init.sql)
 update public.profile_settings
 set full_name = 'Thitipong Songkasin',
-    bio = 'Computer Science student seeking an entry-level Full-Stack Developer or IT Support opportunity. Eager to apply React, TypeScript, responsive UI, and technical troubleshooting skills in real-world projects while continuing to grow in a collaborative software team.',
+    bio = 'Computer Science student at RMUTSB focused on full-stack development and responsive UIs, seeking an entry-level opportunity as a Full-Stack Developer or IT Support. Eager to apply React, TypeScript, and technical troubleshooting skills in real-world projects.',
     profile_image_url = 'assets/avatar.jpg',
     resume_url = 'assets/Thitipong_Songkasin_Resume_TH_With_Photo.pdf'
 where full_name = 'Your Name' and bio = 'Your bio';
@@ -61,9 +61,11 @@ select * from (values
   ('React',        'fa-brands fa-react',    'frontend', now() - interval '7 minutes'),
   ('Next.js',      'fa-solid fa-cube',      'frontend', now() - interval '6 minutes'),
   ('Tailwind CSS', 'fa-solid fa-wind',      'frontend', now() - interval '5 minutes'),
+  ('Vite',         'fa-solid fa-bolt',      'tools',    now() - interval '1 minute'),
   ('Node.js',      'fa-brands fa-node-js',  'backend',  now() - interval '4 minutes'),
   ('TensorFlow AI','fa-solid fa-brain',     'backend',  now() - interval '3 minutes'),
   ('Redis',        'fa-solid fa-database',  'backend',  now() - interval '2 minutes'),
-  ('Git',          'fa-brands fa-git-alt',  'tools',    now() - interval '1 minute')
+  ('Git',          'fa-brands fa-git-alt',  'tools',    now() - interval '1 minute'),
+  ('GitHub',       'fa-brands fa-github',   'tools',    now())
 ) as v(name, icon_name, category, created_at)
 where not exists (select 1 from public.skills);

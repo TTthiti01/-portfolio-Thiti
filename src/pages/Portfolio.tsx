@@ -36,7 +36,7 @@ function Portfolio() {
     const [typewriterText, setTypewriterText] = useState<string>('');
 
     useEffect(() => {
-        const words = ["Computer Science Student.", "Frontend Developer.", "IT Support."];
+        const words = ["Computer Science Student.", "Full-Stack Developer.", "IT Support."];
         let wordIndex = 0;
         let charIndex = 0;
         let isDeleting = false;
@@ -512,7 +512,7 @@ function Portfolio() {
                 <p className="company-status">Currently, I'm a Computer Science Student at <a href="#" className="company-link">@RMUTSB</a>.</p>
                 
                 <p className="hero-desc">
-                    Computer Science student seeking an entry-level Frontend Developer or IT Support opportunity. Eager to apply React, TypeScript, responsive UI, and technical troubleshooting skills in real-world projects while continuing to grow in a collaborative software team.
+                    Computer Science student seeking an entry-level Full-Stack Developer or IT Support opportunity. Eager to apply React, TypeScript, responsive UI, and technical troubleshooting skills in real-world projects while continuing to grow in a collaborative software team.
                 </p>
             </div>
         </section>
@@ -792,7 +792,7 @@ function Portfolio() {
             <h2 className="section-title">Contact</h2>
             <div className="contact-card">
                 <p className="contact-sub">Let's Connect and Create Impact!</p>
-                <p className="contact-text">I am actively seeking an entry-level opportunity as a Frontend Developer or IT Support Specialist. I am eager to apply my technical skills, problem-solving mindset, and passion for technology to a collaborative team. Whether it's building user-friendly web applications or handling technical diagnostics, I'm ready to contribute. Feel free to reach out!</p>
+                <p className="contact-text">I am actively seeking an entry-level opportunity as a Full-Stack Developer or IT Support Specialist. I am eager to apply my technical skills, problem-solving mindset, and passion for technology to a collaborative team. Whether it's building user-friendly web applications or handling technical diagnostics, I'm ready to contribute. Feel free to reach out!</p>
                 
                 <div style={{'display': 'flex', 'justifyContent': 'center', 'gap': '2rem', 'marginBottom': '2rem', 'flexWrap': 'wrap'}}>
                     <a href="https://mail.google.com/mail/?view=cm&fs=1&to=job2547j@Gmail.com" target="_blank" rel="noopener noreferrer" style={{'color': 'var(--text-muted)', 'textDecoration': 'none', 'fontWeight': '600'}}>

@@ -6,7 +6,7 @@
 -- Profile (replaces the placeholder row created by 001_init.sql)
 update public.profile_settings
 set full_name = 'Thitipong Songkasin',
-    bio = 'Computer Science student seeking an entry-level Frontend Developer or IT Support opportunity. Eager to apply React, TypeScript, responsive UI, and technical troubleshooting skills in real-world projects while continuing to grow in a collaborative software team.',
+    bio = 'Computer Science student seeking an entry-level Full-Stack Developer or IT Support opportunity. Eager to apply React, TypeScript, responsive UI, and technical troubleshooting skills in real-world projects while continuing to grow in a collaborative software team.',
     profile_image_url = 'assets/avatar.jpg',
     resume_url = 'assets/Thitipong_Songkasin_Resume_TH_With_Photo.pdf'
 where full_name = 'Your Name' and bio = 'Your bio';

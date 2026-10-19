@@ -512,7 +512,7 @@ function Portfolio() {
                 <p className="company-status">Currently, I'm a Computer Science Student at <a href="#" className="company-link">@RMUTSB</a>.</p>
                 
                 <p className="hero-desc">
-                    Computer Science student seeking an entry-level Full-Stack Developer or IT Support opportunity. Eager to apply React, TypeScript, responsive UI, and technical troubleshooting skills in real-world projects while continuing to grow in a collaborative software team.
+                    Computer Science student at RMUTSB focused on full-stack development and responsive UIs, seeking an entry-level opportunity as a Full-Stack Developer or IT Support. Eager to apply React, TypeScript, and technical troubleshooting skills in real-world projects.
                 </p>
             </div>
         </section>
@@ -621,16 +621,18 @@ function Portfolio() {
 
                     {/*  Connection Lines (Bezier Curves)  */}
                     <path className="flow-line stretching-rope" style={{animationDelay: '0s'}} d="M 70 75 C 70 160, 400 160, 400 250" stroke="url(#line-grad-1)" strokeWidth="2" fill="none" filter="url(#line-glow)" />
-                    <path className="flow-line stretching-rope" style={{animationDelay: '-1.2s'}} d="M 135 75 C 135 160, 400 160, 400 250" stroke="url(#line-grad-1)" strokeWidth="2" fill="none" filter="url(#line-glow)" />
-                    <path className="flow-line stretching-rope" style={{animationDelay: '-2.4s'}} d="M 200 75 C 200 160, 400 160, 400 250" stroke="url(#line-grad-1)" strokeWidth="2" fill="none" filter="url(#line-glow)" />
-                    <path className="flow-line stretching-rope" style={{animationDelay: '-0.8s'}} d="M 265 75 C 265 160, 400 160, 400 250" stroke="url(#line-grad-1)" strokeWidth="2" fill="none" filter="url(#line-glow)" />
-                    <path className="flow-line stretching-rope" style={{animationDelay: '-2.0s'}} d="M 330 75 C 330 160, 400 160, 400 250" stroke="url(#line-grad-1)" strokeWidth="2" fill="none" filter="url(#line-glow)" />
-                    <path className="flow-line stretching-rope" style={{animationDelay: '-3.2s'}} d="M 395 75 C 395 160, 400 160, 400 250" stroke="url(#line-grad-1)" strokeWidth="2" fill="none" filter="url(#line-glow)" />
-                    <path className="flow-line stretching-rope" style={{animationDelay: '-1.6s'}} d="M 460 75 C 460 160, 400 160, 400 250" stroke="url(#line-grad-1)" strokeWidth="2" fill="none" filter="url(#line-glow)" />
-                    <path className="flow-line stretching-rope" style={{animationDelay: '-2.8s'}} d="M 525 75 C 525 160, 400 160, 400 250" stroke="url(#line-grad-1)" strokeWidth="2" fill="none" filter="url(#line-glow)" />
-                    <path className="flow-line stretching-rope" style={{animationDelay: '-0.4s'}} d="M 590 75 C 590 160, 400 160, 400 250" stroke="url(#line-grad-1)" strokeWidth="2" fill="none" filter="url(#line-glow)" />
-                    <path className="flow-line stretching-rope" style={{animationDelay: '-1.8s'}} d="M 655 75 C 655 160, 400 160, 400 250" stroke="url(#line-grad-1)" strokeWidth="2" fill="none" filter="url(#line-glow)" />
-                    <path className="flow-line stretching-rope" style={{animationDelay: '-3.0s'}} d="M 720 75 C 720 160, 400 160, 400 250" stroke="url(#line-grad-1)" strokeWidth="2" fill="none" filter="url(#line-glow)" />
+                    <path className="flow-line stretching-rope" style={{animationDelay: '-1.2s'}} d="M 124.167 75 C 124.167 160, 400 160, 400 250" stroke="url(#line-grad-1)" strokeWidth="2" fill="none" filter="url(#line-glow)" />
+                    <path className="flow-line stretching-rope" style={{animationDelay: '-2.4s'}} d="M 178.333 75 C 178.333 160, 400 160, 400 250" stroke="url(#line-grad-1)" strokeWidth="2" fill="none" filter="url(#line-glow)" />
+                    <path className="flow-line stretching-rope" style={{animationDelay: '-0.8s'}} d="M 232.5 75 C 232.5 160, 400 160, 400 250" stroke="url(#line-grad-1)" strokeWidth="2" fill="none" filter="url(#line-glow)" />
+                    <path className="flow-line stretching-rope" style={{animationDelay: '-2s'}} d="M 286.667 75 C 286.667 160, 400 160, 400 250" stroke="url(#line-grad-1)" strokeWidth="2" fill="none" filter="url(#line-glow)" />
+                    <path className="flow-line stretching-rope" style={{animationDelay: '-3.2s'}} d="M 340.833 75 C 340.833 160, 400 160, 400 250" stroke="url(#line-grad-1)" strokeWidth="2" fill="none" filter="url(#line-glow)" />
+                    <path className="flow-line stretching-rope" style={{animationDelay: '-1.6s'}} d="M 395 75 C 395 160, 400 160, 400 250" stroke="url(#line-grad-1)" strokeWidth="2" fill="none" filter="url(#line-glow)" />
+                    <path className="flow-line stretching-rope" style={{animationDelay: '-2.8s'}} d="M 449.167 75 C 449.167 160, 400 160, 400 250" stroke="url(#line-grad-1)" strokeWidth="2" fill="none" filter="url(#line-glow)" />
+                    <path className="flow-line stretching-rope" style={{animationDelay: '-0.4s'}} d="M 503.333 75 C 503.333 160, 400 160, 400 250" stroke="url(#line-grad-1)" strokeWidth="2" fill="none" filter="url(#line-glow)" />
+                    <path className="flow-line stretching-rope" style={{animationDelay: '-1.8s'}} d="M 557.5 75 C 557.5 160, 400 160, 400 250" stroke="url(#line-grad-1)" strokeWidth="2" fill="none" filter="url(#line-glow)" />
+                    <path className="flow-line stretching-rope" style={{animationDelay: '-3s'}} d="M 611.667 75 C 611.667 160, 400 160, 400 250" stroke="url(#line-grad-1)" strokeWidth="2" fill="none" filter="url(#line-glow)" />
+                    <path className="flow-line stretching-rope" style={{animationDelay: '0s'}} d="M 665.833 75 C 665.833 160, 400 160, 400 250" stroke="url(#line-grad-1)" strokeWidth="2" fill="none" filter="url(#line-glow)" />
+                    <path className="flow-line stretching-rope" style={{animationDelay: '-1.2s'}} d="M 720 75 C 720 160, 400 160, 400 250" stroke="url(#line-grad-1)" strokeWidth="2" fill="none" filter="url(#line-glow)" />
                 </svg>
 
                 {/*  Icons positioned over SVG curve start points  */}
@@ -638,35 +640,41 @@ function Portfolio() {
                     <div className="tech-icon-wrapper" data-name="HTML5" style={{'left': '8.75%'}}>
                         <div className="floating-wrapper" style={{animationDelay: '0s'}}><div className="tech-icon"><i className="fa-brands fa-html5" style={{'color': '#e34c26'}}></i></div></div>
                     </div>
-                    <div className="tech-icon-wrapper" data-name="CSS3" style={{'left': '16.875%'}}>
+                    <div className="tech-icon-wrapper" data-name="CSS3" style={{'left': '15.5208%'}}>
                         <div className="floating-wrapper" style={{animationDelay: '-1.2s'}}><div className="tech-icon"><i className="fa-brands fa-css3-alt" style={{'color': '#264de4'}}></i></div></div>
                     </div>
-                    <div className="tech-icon-wrapper" data-name="JavaScript" style={{'left': '25%'}}>
+                    <div className="tech-icon-wrapper" data-name="JavaScript" style={{'left': '22.2917%'}}>
                         <div className="floating-wrapper" style={{animationDelay: '-2.4s'}}><div className="tech-icon"><i className="fa-brands fa-js" style={{'color': '#f7df1e'}}></i></div></div>
                     </div>
-                    <div className="tech-icon-wrapper" data-name="TypeScript" style={{'left': '33.125%'}}>
+                    <div className="tech-icon-wrapper" data-name="TypeScript" style={{'left': '29.0625%'}}>
                         <div className="floating-wrapper" style={{animationDelay: '-0.8s'}}><div className="tech-icon"><i className="fa-solid fa-code" style={{'color': '#3178c6'}}></i></div></div>
                     </div>
-                    <div className="tech-icon-wrapper" data-name="React" style={{'left': '41.25%'}}>
-                        <div className="floating-wrapper" style={{animationDelay: '-2.0s'}}><div className="tech-icon"><i className="fa-brands fa-react" style={{'color': '#61dafb'}}></i></div></div>
+                    <div className="tech-icon-wrapper" data-name="React" style={{'left': '35.8333%'}}>
+                        <div className="floating-wrapper" style={{animationDelay: '-2s'}}><div className="tech-icon"><i className="fa-brands fa-react" style={{'color': '#61dafb'}}></i></div></div>
                     </div>
-                    <div className="tech-icon-wrapper" data-name="Next.js" style={{'left': '49.375%'}}>
+                    <div className="tech-icon-wrapper" data-name="Next.js" style={{'left': '42.6042%'}}>
                         <div className="floating-wrapper" style={{animationDelay: '-3.2s'}}><div className="tech-icon"><i className="fa-solid fa-cube" style={{'color': '#999'}}></i></div></div>
                     </div>
-                    <div className="tech-icon-wrapper" data-name="Tailwind CSS" style={{'left': '57.5%'}}>
+                    <div className="tech-icon-wrapper" data-name="Tailwind CSS" style={{'left': '49.375%'}}>
                         <div className="floating-wrapper" style={{animationDelay: '-1.6s'}}><div className="tech-icon"><i className="fa-solid fa-wind" style={{'color': '#38bdf8'}}></i></div></div>
                     </div>
-                    <div className="tech-icon-wrapper" data-name="Node.js" style={{'left': '65.625%'}}>
-                        <div className="floating-wrapper" style={{animationDelay: '-2.8s'}}><div className="tech-icon"><i className="fa-brands fa-node-js" style={{'color': '#339933'}}></i></div></div>
+                    <div className="tech-icon-wrapper" data-name="Vite" style={{'left': '56.1458%'}}>
+                        <div className="floating-wrapper" style={{animationDelay: '-2.8s'}}><div className="tech-icon"><i className="fa-solid fa-bolt" style={{'color': '#646cff'}}></i></div></div>
                     </div>
-                    <div className="tech-icon-wrapper" data-name="TensorFlow AI" style={{'left': '73.75%'}}>
-                        <div className="floating-wrapper" style={{animationDelay: '-0.4s'}}><div className="tech-icon"><i className="fa-solid fa-brain" style={{'color': '#ff6f00'}}></i></div></div>
+                    <div className="tech-icon-wrapper" data-name="Node.js" style={{'left': '62.9167%'}}>
+                        <div className="floating-wrapper" style={{animationDelay: '-0.4s'}}><div className="tech-icon"><i className="fa-brands fa-node-js" style={{'color': '#339933'}}></i></div></div>
                     </div>
-                    <div className="tech-icon-wrapper" data-name="Redis" style={{'left': '81.875%'}}>
-                        <div className="floating-wrapper" style={{animationDelay: '-1.8s'}}><div className="tech-icon"><i className="fa-solid fa-database" style={{'color': '#dc382d'}}></i></div></div>
+                    <div className="tech-icon-wrapper" data-name="TensorFlow AI" style={{'left': '69.6875%'}}>
+                        <div className="floating-wrapper" style={{animationDelay: '-1.8s'}}><div className="tech-icon"><i className="fa-solid fa-brain" style={{'color': '#ff6f00'}}></i></div></div>
                     </div>
-                    <div className="tech-icon-wrapper" data-name="Git" style={{'left': '90%'}}>
-                        <div className="floating-wrapper" style={{animationDelay: '-3.0s'}}><div className="tech-icon"><i className="fa-brands fa-git-alt" style={{'color': '#f05032'}}></i></div></div>
+                    <div className="tech-icon-wrapper" data-name="Redis" style={{'left': '76.4583%'}}>
+                        <div className="floating-wrapper" style={{animationDelay: '-3s'}}><div className="tech-icon"><i className="fa-solid fa-database" style={{'color': '#dc382d'}}></i></div></div>
+                    </div>
+                    <div className="tech-icon-wrapper" data-name="Git" style={{'left': '83.2292%'}}>
+                        <div className="floating-wrapper" style={{animationDelay: '0s'}}><div className="tech-icon"><i className="fa-brands fa-git-alt" style={{'color': '#f05032'}}></i></div></div>
+                    </div>
+                    <div className="tech-icon-wrapper" data-name="GitHub" style={{'left': '90%'}}>
+                        <div className="floating-wrapper" style={{animationDelay: '-1.2s'}}><div className="tech-icon"><i className="fa-brands fa-github" style={{'color': '#8b949e'}}></i></div></div>
                     </div>
                 </div>
 

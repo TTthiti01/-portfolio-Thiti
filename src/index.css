@@ -919,7 +919,7 @@ body.dark-theme .exp-details-modal {
 .connector-diagram {
     position: relative;
     width: 100%;
-    max-width: 800px;
+    max-width: 1000px;
     height: 320px;
     margin: 0 auto;
 }
